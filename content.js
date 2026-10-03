@@ -166,6 +166,11 @@
   }
 
   function applyLovableCreditTrigger(trigger) {
+    trigger.style.setProperty("color", "#c2c2c2", "important");
+    trigger.querySelectorAll("svg, span").forEach((child) => {
+      child.style.setProperty("color", "#c2c2c2", "important");
+    });
+
     const visibleText = trigger.querySelector(":scope > span.truncate");
     if (visibleText && visibleText.textContent !== LOVABLE_COUNTER_TEXT) {
       originalLovableCreditTriggerTexts.set(
