@@ -407,10 +407,17 @@
 
   function startLovableCreditEffectController() {
     if (hostname.toLowerCase() !== "lovable.dev") return;
+
+    // O estado inicial é avaliado uma única vez. O efeito só fica ativo
+    // quando o painel está aberto, a URL é um projeto HTTPS e há ligação.
     syncLovableCreditEffect();
 
+    // Online/offline altera apenas o estado do efeito; não cria timers.
     window.addEventListener("online", updateLovableCreditEffectState);
     window.addEventListener("offline", updateLovableCreditEffectState);
+
+    // Navegação dentro de lovable.dev pode mudar o projeto/rota sem
+    // recarregar o content script.
     window.addEventListener("popstate", updateLovableCreditEffectState);
     window.addEventListener("hashchange", updateLovableCreditEffectState);
     window.addEventListener("pageshow", updateLovableCreditEffectState);
