@@ -89,7 +89,7 @@
       align-items: center !important;
       gap: 3px !important;
       color: #f1f1ef !important;
-      font-family: inherit !important;
+      font-family: Inter, Arial, sans-serif !important;
       font-size: 14px !important;
       font-weight: 700 !important;
       line-height: 16px !important;
@@ -110,7 +110,7 @@
 
     #${PANEL_ID} .Lovark-profile-status {
       color: #858583 !important;
-      font-family: inherit !important;
+      font-family: Inter, Arial, sans-serif !important;
       font-size: 11px !important;
       font-weight: 400 !important;
       line-height: 13px !important;
@@ -131,6 +131,7 @@
       overflow: hidden !important;
       display: flex !important;
       flex-direction: column !important;
+      font-family: Inter, Arial, sans-serif !important;
     }
 
     #${PANEL_ID} .Lovark-input {
@@ -170,7 +171,7 @@
       caret-color: #f1f1ef !important;
       border: 0 !important;
       outline: none !important;
-      font-family: inherit !important;
+      font-family: Inter, Arial, sans-serif !important;
       font-size: 14px !important;
       line-height: 20px !important;
       resize: none !important;
@@ -215,7 +216,7 @@
       display: none !important;
       overflow: hidden !important;
       color: #565654 !important;
-      font-family: inherit !important;
+      font-family: Inter, Arial, sans-serif !important;
       font-size: 14px !important;
       font-weight: 400 !important;
       line-height: 20px !important;
@@ -280,7 +281,7 @@
       align-items: center !important;
       justify-content: center !important;
       border-radius: 50% !important;
-      font-family: inherit !important;
+      font-family: Inter, Arial, sans-serif !important;
       cursor: pointer !important;
       z-index: 3 !important;
     }
