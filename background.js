@@ -3,9 +3,9 @@ chrome.action.onClicked.addListener(async (tab) => {
 
   try {
     await chrome.tabs.sendMessage(tab.id, {
-      type: "LOVABURST_TOGGLE"
+      type: "Lovark_TOGGLE"
     });
   } catch (error) {
-    console.error("LovaBurst:", error);
+    console.error("Lovark:", error);
   }
 });

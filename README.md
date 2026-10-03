@@ -1,4 +1,4 @@
-LovaBurst v8 · 1.20.4
+Lovark v8 · 1.20.4
 
 Extensão Chrome Manifest V3 para abrir/fechar manualmente um painel HTML
 injetado nas páginas do Lovable.

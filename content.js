@@ -1,12 +1,12 @@
 (() => {
   const PANEL_WIDTH = 400;
-  const PANEL_ID = "__lovaburst_panel__";
-  const STYLE_ID = "__lovaburst_style__";
+  const PANEL_ID = "__Lovark_panel__";
+  const STYLE_ID = "__Lovark_style__";
   const hostname = window.location.hostname;
   let teardownCurrentPanel = null;
 
 
-  function toggleLovaBurst() {
+  function toggleLovark() {
     const existingPanel = document.getElementById(PANEL_ID);
     const existingStyle = document.getElementById(STYLE_ID);
 
@@ -43,7 +43,7 @@
       display: none !important;
     }
 
-    #${PANEL_ID} .lovaburst-header {
+    #${PANEL_ID} .Lovark-header {
       position: absolute !important;
       top: 0 !important;
       left: 0 !important;
@@ -62,7 +62,7 @@
       padding: 0 12px !important;
     }
 
-    #${PANEL_ID} .lovaburst-avatar {
+    #${PANEL_ID} .Lovark-avatar {
       width: 28px !important;
       min-width: 28px !important;
       max-width: 28px !important;
@@ -75,7 +75,7 @@
       background: #272726 !important;
     }
 
-    #${PANEL_ID} .lovaburst-profile-info {
+    #${PANEL_ID} .Lovark-profile-info {
       display: flex !important;
       flex-direction: column !important;
       justify-content: center !important;
@@ -84,7 +84,7 @@
       line-height: 1 !important;
     }
 
-    #${PANEL_ID} .lovaburst-profile-name {
+    #${PANEL_ID} .Lovark-profile-name {
       display: flex !important;
       align-items: center !important;
       gap: 3px !important;
@@ -95,7 +95,7 @@
       line-height: 16px !important;
     }
 
-    #${PANEL_ID} .lovaburst-verified-badge {
+    #${PANEL_ID} .Lovark-verified-badge {
       display: block !important;
       width: 10px !important;
       min-width: 10px !important;
@@ -108,7 +108,7 @@
       -webkit-user-drag: none !important;
     }
 
-    #${PANEL_ID} .lovaburst-profile-status {
+    #${PANEL_ID} .Lovark-profile-status {
       color: #858583 !important;
       font-family: inherit !important;
       font-size: 11px !important;
@@ -133,7 +133,7 @@
       flex-direction: column !important;
     }
 
-    #${PANEL_ID} .lovaburst-input {
+    #${PANEL_ID} .Lovark-input {
       position: absolute !important;
       left: 11px !important;
       bottom: 7px !important;
@@ -154,7 +154,7 @@
       transition: height 120ms ease !important;
     }
 
-    #${PANEL_ID} .lovaburst-question {
+    #${PANEL_ID} .Lovark-question {
       position: absolute !important;
       top: 0 !important;
       left: 0 !important;
@@ -179,19 +179,19 @@
       z-index: 1 !important;
     }
 
-    #${PANEL_ID} .lovaburst-question::placeholder {
+    #${PANEL_ID} .Lovark-question::placeholder {
       color: #565654 !important;
       opacity: 1 !important;
       font-weight: 700 !important;
     }
 
-    #${PANEL_ID} .lovaburst-input.is-recording .lovaburst-question,
-    #${PANEL_ID} .lovaburst-input.is-processing .lovaburst-question {
+    #${PANEL_ID} .Lovark-input.is-recording .Lovark-question,
+    #${PANEL_ID} .Lovark-input.is-processing .Lovark-question {
       opacity: 0 !important;
       pointer-events: none !important;
     }
 
-    #${PANEL_ID} .lovaburst-waveform {
+    #${PANEL_ID} .Lovark-waveform {
       position: absolute !important;
       top: 15px !important;
       left: 14px !important;
@@ -203,11 +203,11 @@
       z-index: 2 !important;
     }
 
-    #${PANEL_ID} .lovaburst-input.is-recording .lovaburst-waveform {
+    #${PANEL_ID} .Lovark-input.is-recording .Lovark-waveform {
       display: block !important;
     }
 
-    #${PANEL_ID} .lovaburst-voice-status {
+    #${PANEL_ID} .Lovark-voice-status {
       position: absolute !important;
       top: 12px !important;
       left: 14px !important;
@@ -225,12 +225,12 @@
       z-index: 2 !important;
     }
 
-    #${PANEL_ID} .lovaburst-input.is-processing .lovaburst-voice-status,
-    #${PANEL_ID} .lovaburst-input.is-notice .lovaburst-voice-status {
+    #${PANEL_ID} .Lovark-input.is-processing .Lovark-voice-status,
+    #${PANEL_ID} .Lovark-input.is-notice .Lovark-voice-status {
       display: block !important;
     }
 
-    #${PANEL_ID} .lovaburst-input.is-processing .lovaburst-voice-status {
+    #${PANEL_ID} .Lovark-input.is-processing .Lovark-voice-status {
       color: transparent !important;
       background-image: linear-gradient(
         90deg,
@@ -244,10 +244,10 @@
       background-clip: text !important;
       -webkit-background-clip: text !important;
       -webkit-text-fill-color: transparent !important;
-      animation: lovaburst-transcription-wave 1.65s linear infinite !important;
+      animation: Lovark-transcription-wave 1.65s linear infinite !important;
     }
 
-    @keyframes lovaburst-transcription-wave {
+    @keyframes Lovark-transcription-wave {
       from {
         background-position: 100% 50%;
       }
@@ -257,7 +257,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      #${PANEL_ID} .lovaburst-input.is-processing .lovaburst-voice-status {
+      #${PANEL_ID} .Lovark-input.is-processing .Lovark-voice-status {
         color: #565654 !important;
         background-image: none !important;
         -webkit-text-fill-color: #565654 !important;
@@ -265,7 +265,7 @@
       }
     }
 
-    #${PANEL_ID} .lovaburst-input-action {
+    #${PANEL_ID} .Lovark-input-action {
       position: absolute !important;
       bottom: 12px !important;
       width: 28px !important;
@@ -285,42 +285,42 @@
       z-index: 3 !important;
     }
 
-    #${PANEL_ID} .lovaburst-add,
-    #${PANEL_ID} .lovaburst-mic {
+    #${PANEL_ID} .Lovark-add,
+    #${PANEL_ID} .Lovark-mic {
       background: #363634 !important;
       border: 1px solid #626261 !important;
       color: #c2c2c2 !important;
     }
 
-    #${PANEL_ID} .lovaburst-add {
+    #${PANEL_ID} .Lovark-add {
       left: 12px !important;
     }
 
-    #${PANEL_ID} .lovaburst-mic {
+    #${PANEL_ID} .Lovark-mic {
       right: 48px !important;
     }
 
-    #${PANEL_ID} .lovaburst-mic.is-listening {
+    #${PANEL_ID} .Lovark-mic.is-listening {
       background: transparent !important;
       border: 0 !important;
       border-radius: 0 !important;
       color: #f1f1ef !important;
     }
 
-    #${PANEL_ID} .lovaburst-send {
+    #${PANEL_ID} .Lovark-send {
       right: 12px !important;
       background: #f1f1ef !important;
       border: 0 !important;
       color: #272726 !important;
     }
 
-    #${PANEL_ID} .lovaburst-add-icon {
+    #${PANEL_ID} .Lovark-add-icon {
       font-size: 20px !important;
       font-weight: 300 !important;
       line-height: 20px !important;
     }
 
-    #${PANEL_ID} .lovaburst-input-action svg {
+    #${PANEL_ID} .Lovark-input-action svg {
       width: 16px !important;
       height: 16px !important;
       display: block !important;
@@ -331,19 +331,19 @@
       stroke-linejoin: round !important;
     }
 
-    #${PANEL_ID} .lovaburst-send svg {
+    #${PANEL_ID} .Lovark-send svg {
       width: 14px !important;
       height: 14px !important;
       stroke-width: 2.5 !important;
     }
 
-    #${PANEL_ID} .lovaburst-mic.is-listening svg {
+    #${PANEL_ID} .Lovark-mic.is-listening svg {
       width: 14px !important;
       height: 14px !important;
       stroke-width: 2.5 !important;
     }
 
-    #${PANEL_ID} .lovaburst-input-action:disabled {
+    #${PANEL_ID} .Lovark-input-action:disabled {
       cursor: default !important;
       opacity: 0.55 !important;
     }
@@ -355,24 +355,24 @@
     panel.id = PANEL_ID;
 
     const header = document.createElement("div");
-    header.className = "lovaburst-header";
+    header.className = "Lovark-header";
     header.setAttribute("role", "banner");
 
     const avatar = document.createElement("div");
-    avatar.className = "lovaburst-avatar";
+    avatar.className = "Lovark-avatar";
     avatar.setAttribute("role", "img");
     avatar.setAttribute("aria-label", "Foto de perfil de Lovark");
 
     const profileInfo = document.createElement("div");
-    profileInfo.className = "lovaburst-profile-info";
+    profileInfo.className = "Lovark-profile-info";
 
     const profileName = document.createElement("div");
-    profileName.className = "lovaburst-profile-name";
+    profileName.className = "Lovark-profile-name";
     const profileNameText = document.createElement("span");
     profileNameText.textContent = "Lovark";
 
     const verifiedBadge = document.createElement("img");
-    verifiedBadge.className = "lovaburst-verified-badge";
+    verifiedBadge.className = "Lovark-verified-badge";
     verifiedBadge.src = chrome.runtime.getURL("icons/verified-badge.png");
     verifiedBadge.alt = "Conta verificada";
     verifiedBadge.title = "Conta verificada";
@@ -386,7 +386,7 @@
     profileName.appendChild(verifiedBadge);
 
     const profileStatus = document.createElement("div");
-    profileStatus.className = "lovaburst-profile-status";
+    profileStatus.className = "Lovark-profile-status";
     profileStatus.textContent = "online";
 
     profileInfo.appendChild(profileName);
@@ -395,24 +395,24 @@
     header.appendChild(profileInfo);
 
     const inputBox = document.createElement("div");
-    inputBox.className = "lovaburst-input";
+    inputBox.className = "Lovark-input";
     inputBox.setAttribute("role", "group");
     inputBox.setAttribute("aria-label", "Área de pergunta à Lovark");
 
     const questionInput = document.createElement("textarea");
-    questionInput.className = "lovaburst-question";
+    questionInput.className = "Lovark-question";
     questionInput.rows = 1;
     questionInput.placeholder = "Pergunte à Lovark...";
     questionInput.setAttribute("aria-label", "Pergunte à Lovark");
 
     const addButton = document.createElement("button");
-    addButton.className = "lovaburst-input-action lovaburst-add";
+    addButton.className = "Lovark-input-action Lovark-add";
     addButton.type = "button";
     addButton.setAttribute("aria-label", "Adicionar");
-    addButton.innerHTML = '<span class="lovaburst-add-icon" aria-hidden="true">+</span>';
+    addButton.innerHTML = '<span class="Lovark-add-icon" aria-hidden="true">+</span>';
 
     const micButton = document.createElement("button");
-    micButton.className = "lovaburst-input-action lovaburst-mic";
+    micButton.className = "Lovark-input-action Lovark-mic";
     micButton.type = "button";
     micButton.setAttribute("aria-label", "Iniciar gravação");
     const microphoneIcon = `
@@ -447,11 +447,11 @@
     micButton.innerHTML = microphoneIcon;
 
     const waveform = document.createElement("canvas");
-    waveform.className = "lovaburst-waveform";
+    waveform.className = "Lovark-waveform";
     waveform.setAttribute("aria-hidden", "true");
 
     const voiceStatus = document.createElement("div");
-    voiceStatus.className = "lovaburst-voice-status";
+    voiceStatus.className = "Lovark-voice-status";
     voiceStatus.setAttribute("role", "status");
     voiceStatus.setAttribute("aria-live", "polite");
     voiceStatus.hidden = true;
@@ -874,7 +874,7 @@
         animateWaveform(session);
         recognition.start();
       } catch (error) {
-        console.error("LovaBurst voice input:", error);
+        console.error("Lovark voice input:", error);
         const message =
           error?.name === "NotAllowedError" ||
           error?.name === "PermissionDeniedError"
@@ -899,7 +899,7 @@
     });
 
     const sendButton = document.createElement("button");
-    sendButton.className = "lovaburst-input-action lovaburst-send";
+    sendButton.className = "Lovark-input-action Lovark-send";
     sendButton.type = "button";
     sendButton.setAttribute("aria-label", "Enviar");
     sendButton.innerHTML = sendIcon;
@@ -975,8 +975,8 @@
   }
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message?.type !== "LOVABURST_TOGGLE") return;
-    toggleLovaBurst();
+    if (message?.type !== "Lovark_TOGGLE") return;
+    toggleLovark();
     sendResponse({ ok: true });
   });
 })();
