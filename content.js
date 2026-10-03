@@ -388,7 +388,7 @@
 
     const verifiedBadge = document.createElement("img");
     verifiedBadge.className = "Lovark-verified-badge";
-    verifiedBadge.src = chrome.runtime.getURL("icons/verified-badge.png");
+    verifiedBadge.src = chrome.runtime.getURL("icons/verified.png");
     verifiedBadge.alt = "Conta verificada";
     verifiedBadge.title = "Conta verificada";
     verifiedBadge.decoding = "async";

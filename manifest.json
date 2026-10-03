@@ -39,7 +39,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "icons/verified-badge.png",
+        "icons/verified.png",
         "fonts/Inter-Regular.woff2"
       ],
       "matches": [
