@@ -98,7 +98,8 @@
       line-height: 1 !important;
     }
 
-    #${PANEL_ID} .Lovark-profile-name {
+    #${PANEL_ID} .Lovark-profile-name,
+    #${PANEL_ID} .Lovark-profile-name span {
       display: flex !important;
       align-items: center !important;
       gap: 3px !important;
