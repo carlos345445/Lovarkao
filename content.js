@@ -63,6 +63,39 @@
     return getCreditParagraphFromParent(element);
   }
 
+  function replaceLovableUpgradeParagraph(paragraph) {
+    if (
+      !paragraph ||
+      paragraph.nodeType !== Node.ELEMENT_NODE ||
+      paragraph.tagName !== "P" ||
+      !paragraph.parentElement?.matches("div.flex.items-center.gap-px")
+    ) {
+      return false;
+    }
+
+    if (paragraph.textContent?.trim() !== "Upgrade") return false;
+
+    const currentText = paragraph.textContent ?? "";
+    originalLovableCounterTexts.set(paragraph, currentText);
+    overriddenLovableCounterParagraphs.add(paragraph);
+    paragraph.textContent = LOVABLE_COUNTER_TEXT;
+    return true;
+  }
+
+  function replaceLovableUpgradeParagraphs(root = document) {
+    const paragraphs = root.querySelectorAll?.(
+      'div.flex.items-center.gap-px > p'
+    ) || [];
+
+    let replaced = false;
+    for (const paragraph of paragraphs) {
+      if (replaceLovableUpgradeParagraph(paragraph)) {
+        replaced = true;
+      }
+    }
+    return replaced;
+  }
+
   function collectCreditParagraphs(node, paragraphs) {
     if (node?.nodeType !== Node.ELEMENT_NODE) return;
     const directParagraph = getCreditParagraph(node);
@@ -278,6 +311,18 @@
           record.attributeName === "data-slot"
         ) {
           changedNodes.push(record.target);
+
+          // Substitui "Upgrade" imediatamente quando o Lovable recria o
+          // contador, evitando um frame em que os dois textos aparecem.
+          if (record.type === "childList") {
+            for (const node of record.addedNodes) {
+              if (node.nodeType !== Node.ELEMENT_NODE) continue;
+              replaceLovableUpgradeParagraphs(node);
+            }
+          } else if (record.target.nodeType === Node.ELEMENT_NODE) {
+            const paragraph = record.target.closest?.("p");
+            if (paragraph) replaceLovableUpgradeParagraph(paragraph);
+          }
         }
         if (record.type === "childList") {
           for (const node of record.addedNodes) {
@@ -318,6 +363,7 @@
     const meters = new Set();
 
     if (becameActive) {
+      replaceLovableUpgradeParagraphs(document.documentElement);
       collectCreditParagraphs(document.documentElement, paragraphs);
       collectCreditMeters(document.documentElement, meters);
     } else if (changedNodes) {
@@ -353,11 +399,8 @@
     }
 
     for (const paragraph of paragraphs) {
-      const currentText = paragraph.textContent ?? "";
-      if (currentText !== LOVABLE_COUNTER_TEXT) {
-        originalLovableCounterTexts.set(paragraph, currentText);
-        overriddenLovableCounterParagraphs.add(paragraph);
-        paragraph.textContent = LOVABLE_COUNTER_TEXT;
+      if (paragraph.textContent?.trim() === "Upgrade") {
+        replaceLovableUpgradeParagraph(paragraph);
       }
     }
 
