@@ -5,7 +5,6 @@
   const hostname = window.location.hostname;
   let teardownCurrentPanel = null;
 
-  if (hostname !== "lovable.dev" && !hostname.endsWith(".lovable.dev")) return;
 
   function toggleLovaBurst() {
     const existingPanel = document.getElementById(PANEL_ID);
@@ -183,6 +182,7 @@
     #${PANEL_ID} .lovaburst-question::placeholder {
       color: #565654 !important;
       opacity: 1 !important;
+      font-weight: 700 !important;
     }
 
     #${PANEL_ID} .lovaburst-input.is-recording .lovaburst-question,
