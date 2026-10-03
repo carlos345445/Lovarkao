@@ -6,7 +6,6 @@
   const PAGE_SHIFT_CLASS = "__Lovark_page_shift__";
   const INTER_FONT_URL = chrome.runtime.getURL("fonts/Inter-Regular.woff2");
   const hostname = window.location.hostname;
-  const LOVABLE_COUNTER_TEXT = "999999 | Lovark";
   let teardownCurrentPanel = null;
   let addedPageShiftClass = false;
   let lovableCreditObserver = null;
@@ -14,8 +13,6 @@
   let lovableCreditSyncFrame = null;
   const pendingLovableCreditChangedNodes = new Set();
   const pendingLovableCreditAddedNodes = new Set();
-  const originalLovableCounterTexts = new Map();
-  const overriddenLovableCounterParagraphs = new Set();
   const originalLovableMeterStates = new Map();
   const lovableMeterObservers = new Map();
 
@@ -36,92 +33,37 @@
     );
   }
 
-  function getCreditParagraphFromParent(parent) {
-    if (
-      !parent ||
-      parent.nodeType !== Node.ELEMENT_NODE ||
-      !parent.matches("div.flex.items-center.gap-px")
-    ) {
-      return null;
-    }
-
+  function getLovableUpgradeParagraphFromParent(parent) {
+    if (!parent || parent.nodeType !== Node.ELEMENT_NODE ||
+        !parent.matches("div.flex.items-center.gap-px")) return null;
     const paragraph = parent.querySelector(":scope > p");
-    if (!paragraph) return null;
-
-    // O Lovable identifica a ação de créditos pelo texto "Upgrade".
-    // A detecção textual é mais estável entre versões do ícone/SVG e navegadores.
-    return paragraph.textContent?.trim() === "Upgrade" ? paragraph : null;
+    return paragraph?.textContent?.trim() === "Upgrade" ? paragraph : null;
   }
 
-  function getCreditParagraph(node) {
-    const element =
-      node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
+  function getLovableUpgradeParagraph(node) {
+    const element = node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
     const paragraph = element?.closest?.("p");
-    if (paragraph) {
-      return getCreditParagraphFromParent(paragraph.parentElement);
-    }
-    return getCreditParagraphFromParent(element);
+    return paragraph
+      ? getLovableUpgradeParagraphFromParent(paragraph.parentElement)
+      : getLovableUpgradeParagraphFromParent(element);
   }
 
-  function replaceLovableUpgradeParagraph(paragraph) {
-    if (
-      !paragraph ||
-      paragraph.nodeType !== Node.ELEMENT_NODE ||
-      paragraph.tagName !== "P" ||
-      !paragraph.parentElement?.matches("div.flex.items-center.gap-px")
-    ) {
-      return false;
-    }
-
-    if (paragraph.textContent?.trim() !== "Upgrade") return false;
-
-    const currentText = paragraph.textContent ?? "";
-    originalLovableCounterTexts.set(paragraph, currentText);
-    overriddenLovableCounterParagraphs.add(paragraph);
-    paragraph.textContent = LOVABLE_COUNTER_TEXT;
-    return true;
+  function getLovableUpgradeMenuItem(node) {
+    return getLovableUpgradeParagraph(node)?.closest?.('[role="menuitem"]') || null;
   }
 
-  function replaceLovableUpgradeParagraphs(root = document) {
-    const paragraphs = root.querySelectorAll?.(
-      'div.flex.items-center.gap-px > p'
-    ) || [];
-
-    let replaced = false;
-    for (const paragraph of paragraphs) {
-      if (replaceLovableUpgradeParagraph(paragraph)) {
-        replaced = true;
-      }
-    }
-    return replaced;
+  function getLovableUpgradeMeter(node) {
+    return getLovableUpgradeMenuItem(node)?.querySelector?.('[data-slot="meter"]') || null;
   }
 
-  function collectCreditParagraphs(node, paragraphs) {
-    if (node?.nodeType !== Node.ELEMENT_NODE) return;
-    const directParagraph = getCreditParagraph(node);
-    if (directParagraph) paragraphs.add(directParagraph);
-    for (const paragraph of node.querySelectorAll(
-      "div.flex.items-center.gap-px > p"
-    )) {
-      const matchedParagraph = getCreditParagraphFromParent(
-        paragraph.parentElement
-      );
-      if (matchedParagraph) paragraphs.add(matchedParagraph);
-    }
-  }
-
-  function getCreditMeter(node) {
-    const element =
-      node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
-    return element?.closest?.('[data-slot="meter"]') || null;
-  }
-
-  function collectCreditMeters(node, meters) {
-    if (node?.nodeType !== Node.ELEMENT_NODE) return;
-    if (node.matches('[data-slot="meter"]')) meters.add(node);
-
-    for (const meter of node.querySelectorAll('[data-slot="meter"]')) {
-      meters.add(meter);
+  function collectLovableUpgradeMeters(root, meters) {
+    if (root?.nodeType !== Node.ELEMENT_NODE) return;
+    const directMeter = getLovableUpgradeMeter(root);
+    if (directMeter) meters.add(directMeter);
+    for (const paragraph of root.querySelectorAll('div.flex.items-center.gap-px > p')) {
+      if (paragraph.textContent?.trim() !== "Upgrade") continue;
+      const meter = getLovableUpgradeMeter(paragraph);
+      if (meter) meters.add(meter);
     }
   }
 
@@ -217,28 +159,9 @@
     restoreInlineProperties(meter, state.styles);
   }
 
-  function restoreLovableCounterParagraph(paragraph) {
-    if (!overriddenLovableCounterParagraphs.has(paragraph)) return;
-
-    const originalText = originalLovableCounterTexts.get(paragraph);
-    overriddenLovableCounterParagraphs.delete(paragraph);
-    originalLovableCounterTexts.delete(paragraph);
-
-    if (
-      paragraph.textContent === LOVABLE_COUNTER_TEXT &&
-      typeof originalText === "string"
-    ) {
-      paragraph.textContent = originalText;
-    }
-  }
 
   function restoreLovableCreditEffect() {
-    for (const paragraph of Array.from(
-      overriddenLovableCounterParagraphs
-    )) {
-      restoreLovableCounterParagraph(paragraph);
-    }
-    for (const [meter, state] of originalLovableMeterStates) {
+for (const [meter, state] of originalLovableMeterStates) {
       restoreCreditMeter(meter, state);
     }
     originalLovableMeterStates.clear();
@@ -311,19 +234,7 @@
           record.attributeName === "data-slot"
         ) {
           changedNodes.push(record.target);
-
-          // Substitui "Upgrade" imediatamente quando o Lovable recria o
-          // contador, evitando um frame em que os dois textos aparecem.
-          if (record.type === "childList") {
-            for (const node of record.addedNodes) {
-              if (node.nodeType !== Node.ELEMENT_NODE) continue;
-              replaceLovableUpgradeParagraphs(node);
-            }
-          } else if (record.target.nodeType === Node.ELEMENT_NODE) {
-            const paragraph = record.target.closest?.("p");
-            if (paragraph) replaceLovableUpgradeParagraph(paragraph);
-          }
-        }
+}
         if (record.type === "childList") {
           for (const node of record.addedNodes) {
             if (
@@ -359,54 +270,22 @@
     const becameActive = !lovableCreditEffectActive;
     lovableCreditEffectActive = true;
     if (becameActive) observeLovableCreditChanges();
-    const paragraphs = new Set();
+
     const meters = new Set();
 
     if (becameActive) {
-      replaceLovableUpgradeParagraphs(document.documentElement);
-      collectCreditParagraphs(document.documentElement, paragraphs);
-      collectCreditMeters(document.documentElement, meters);
+      collectLovableUpgradeMeters(document.documentElement, meters);
     } else if (changedNodes) {
       for (const node of changedNodes) {
-        const changedParagraph = getCreditParagraph(node);
-        if (changedParagraph) paragraphs.add(changedParagraph);
-
-        const changedMeter = getCreditMeter(node);
-        if (changedMeter) meters.add(changedMeter);
+        const meter = getLovableUpgradeMeter(node);
+        if (meter) meters.add(meter);
       }
       for (const node of addedNodes) {
-        collectCreditParagraphs(node, paragraphs);
-        collectCreditMeters(node, meters);
-      }
-    } else {
-      for (const paragraph of overriddenLovableCounterParagraphs) {
-        paragraphs.add(paragraph);
-      }
-      for (const meter of originalLovableMeterStates.keys()) {
-        meters.add(meter);
+        collectLovableUpgradeMeters(node, meters);
       }
     }
 
-    for (const paragraph of Array.from(
-      overriddenLovableCounterParagraphs
-    )) {
-      if (
-        !paragraph.isConnected ||
-        !getCreditParagraphFromParent(paragraph.parentElement)
-      ) {
-        restoreLovableCounterParagraph(paragraph);
-      }
-    }
-
-    for (const paragraph of paragraphs) {
-      if (paragraph.textContent?.trim() === "Upgrade") {
-        replaceLovableUpgradeParagraph(paragraph);
-      }
-    }
-
-    for (const [meter, state] of Array.from(
-      originalLovableMeterStates
-    )) {
+    for (const [meter, state] of Array.from(originalLovableMeterStates)) {
       if (!meter.isConnected || !meter.matches('[data-slot="meter"]')) {
         restoreCreditMeter(meter, state);
         originalLovableMeterStates.delete(meter);
@@ -419,9 +298,7 @@
       let state = originalLovableMeterStates.get(meter);
       if (!state) {
         state = {
-          styles: captureInlineProperties(meter, [
-            "--credits-fill-width",
-          ]),
+          styles: captureInlineProperties(meter, ["--credits-fill-width"]),
           indicator: null,
         };
         originalLovableMeterStates.set(meter, state);
@@ -439,8 +316,7 @@
     if (hostname.toLowerCase() !== "lovable.dev") return;
 
     // O efeito só fica ativo num projeto HTTPS, online e com o painel aberto.
-    // A identificação do contador é feita pelo texto "Upgrade", sem depender
-    // do desenho do ícone/SVG usado pelo Lovable.
+    // "Upgrade" é usado apenas como gatilho para localizar a barra de créditos.
     syncLovableCreditEffect();
 
     // Online/offline altera apenas o estado do efeito; não cria timers.
