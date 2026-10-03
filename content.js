@@ -53,15 +53,23 @@
   }
 
   function isLovableUpgradeText(value) {
-    return /\\bUpgrade\\b/i.test(value.trim());
+    return value.trim().toLowerCase().includes("upgrade");
   }
 
   function isLovableReplacementText(value) {
     const text = value.trim();
+    const parts = text.toLowerCase().split(/\\s+/);
+    const numericValue = Number(parts[0]?.replace(",", "."));
+
     return (
-      /^\\d+(?:[.,]\\d+)?\\s+left$/i.test(text) ||
-      /^\\d+(?:[.,]\\d+)?\\s+cr[eé]dito\\s+restante$/i.test(text) ||
-      /^Credits$/i.test(text)
+      (parts.length === 2 &&
+        parts[1] === "left" &&
+        Number.isFinite(numericValue)) ||
+      (parts.length === 3 &&
+        (parts[1] === "crédito" || parts[1] === "credito") &&
+        parts[2] === "restante" &&
+        Number.isFinite(numericValue)) ||
+      text.toLowerCase() === "credits"
     );
   }
 
