@@ -2,6 +2,7 @@
   const PANEL_WIDTH = 400;
   const PANEL_ID = "__Lovark_panel__";
   const STYLE_ID = "__Lovark_style__";
+  const INTER_FONT_URL = chrome.runtime.getURL("fonts/Inter-Regular.woff2");
   const hostname = window.location.hostname;
   let teardownCurrentPanel = null;
 
@@ -23,6 +24,19 @@
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
+    @font-face {
+      font-family: "Inter";
+      src: url("${INTER_FONT_URL}") format("woff2");
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+    }
+
+    #${PANEL_ID},
+    #${PANEL_ID} * {
+      font-family: "Inter", Arial, sans-serif !important;
+    }
+
     html {
       margin-right: ${PANEL_WIDTH}px !important;
       width: calc(100% - ${PANEL_WIDTH}px) !important;
