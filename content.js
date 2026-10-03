@@ -33,38 +33,88 @@
     );
   }
 
-  function getLovableUpgradeParagraphFromParent(parent) {
-    if (!parent || parent.nodeType !== Node.ELEMENT_NODE ||
-        !parent.matches("div.flex.items-center.gap-px")) return null;
-    const paragraph = parent.querySelector(":scope > p");
-    return paragraph?.textContent?.trim() === "Upgrade" ? paragraph : null;
-  }
+  const LOVARK_CREDIT_TEXT = "999999 | Lovark";
+  const originalLovableCreditTexts = new Map();
 
-  function getLovableUpgradeParagraph(node) {
-    const element = node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
-    const paragraph = element?.closest?.("p");
-    return paragraph
-      ? getLovableUpgradeParagraphFromParent(paragraph.parentElement)
-      : getLovableUpgradeParagraphFromParent(element);
-  }
+  function getLovableTextNode(root, matcher) {
+    if (!root) return null;
+    const start = root.nodeType === Node.TEXT_NODE ? root : root;
+    const walker = document.createTreeWalker(
+      start,
+      NodeFilter.SHOW_TEXT
+    );
 
-  function getLovableUpgradeMenuItem(node) {
-    return getLovableUpgradeParagraph(node)?.closest?.('[role="menuitem"]') || null;
-  }
-
-  function getLovableUpgradeMeter(node) {
-    return getLovableUpgradeMenuItem(node)?.querySelector?.('[data-slot="meter"]') || null;
-  }
-
-  function collectLovableUpgradeMeters(root, meters) {
-    if (root?.nodeType !== Node.ELEMENT_NODE) return;
-    const directMeter = getLovableUpgradeMeter(root);
-    if (directMeter) meters.add(directMeter);
-    for (const paragraph of root.querySelectorAll('div.flex.items-center.gap-px > p')) {
-      if (paragraph.textContent?.trim() !== "Upgrade") continue;
-      const meter = getLovableUpgradeMeter(paragraph);
-      if (meter) meters.add(meter);
+    let node = walker.nextNode();
+    while (node) {
+      if (matcher(node.nodeValue || "")) return node;
+      node = walker.nextNode();
     }
+    return null;
+  }
+
+  function isLovableUpgradeText(value) {
+    return /\\bUpgrade\\b/i.test(value.trim());
+  }
+
+  function isLovableReplacementText(value) {
+    const text = value.trim();
+    return (
+      /^\\d+(?:[.,]\\d+)?\\s+left$/i.test(text) ||
+      /^\\d+(?:[.,]\\d+)?\\s+cr[eé]dito\\s+restante$/i.test(text) ||
+      /^Credits$/i.test(text)
+    );
+  }
+
+  function getLovableMeterForTextNode(textNode) {
+    let current = textNode?.parentElement || null;
+    while (current) {
+      const meter = current.querySelector?.('[data-slot="meter"]');
+      if (meter) return meter;
+      current = current.parentElement;
+    }
+    return null;
+  }
+
+  function collectLovableCreditTextNodes(root, meters, replacements) {
+    if (!root) return;
+
+    const walkerRoot =
+      root.nodeType === Node.TEXT_NODE ? root.parentElement : root;
+    if (!walkerRoot) return;
+
+    const walker = document.createTreeWalker(
+      walkerRoot,
+      NodeFilter.SHOW_TEXT
+    );
+
+    let node = walkerRoot.nodeType === Node.TEXT_NODE ? walkerRoot : walker.nextNode();
+    while (node) {
+      const value = node.nodeValue || "";
+      if (isLovableUpgradeText(value) || isLovableReplacementText(value)) {
+        const meter = getLovableMeterForTextNode(node);
+        if (meter) {
+          meters.add(meter);
+          if (isLovableReplacementText(value) && value.trim() !== LOVARK_CREDIT_TEXT) {
+            if (!originalLovableCreditTexts.has(node)) {
+              originalLovableCreditTexts.set(node, value);
+            }
+            if (node.nodeValue !== LOVARK_CREDIT_TEXT) {
+              node.nodeValue = LOVARK_CREDIT_TEXT;
+            }
+          }
+        }
+      }
+      node = walker.nextNode();
+    }
+  }
+
+  function restoreLovableCreditTexts() {
+    for (const [node, originalValue] of originalLovableCreditTexts) {
+      if (node.isConnected && node.nodeValue === LOVARK_CREDIT_TEXT) {
+        node.nodeValue = originalValue;
+      }
+    }
+    originalLovableCreditTexts.clear();
   }
 
   function captureInlineProperties(element, properties) {
@@ -260,8 +310,9 @@ for (const [meter, state] of originalLovableMeterStates) {
   function syncLovableCreditEffect(changedNodes = null, addedNodes = []) {
     const shouldBeActive = shouldApplyLovableCreditEffect();
     if (!shouldBeActive) {
-      if (lovableCreditEffectActive || originalLovableMeterStates.size) {
+      if (lovableCreditEffectActive || originalLovableMeterStates.size || originalLovableCreditTexts.size) {
         restoreLovableCreditEffect();
+        restoreLovableCreditTexts();
       }
       disconnectLovableCreditObserver();
       return;
@@ -316,7 +367,8 @@ for (const [meter, state] of originalLovableMeterStates) {
     if (hostname.toLowerCase() !== "lovable.dev") return;
 
     // O efeito só fica ativo num projeto HTTPS, online e com o painel aberto.
-    // "Upgrade" é usado apenas como gatilho para localizar a barra de créditos.
+    // A deteção usa o texto original: "Upgrade" ativa só a barra;
+    // "left", "crédito restante" e "Credits" são substituídos por 999999 | Lovark.
     syncLovableCreditEffect();
 
     // Online/offline altera apenas o estado do efeito; não cria timers.
