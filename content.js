@@ -149,6 +149,112 @@
       font-family: Inter, Arial, sans-serif !important;
     }
 
+    #${PANEL_ID} .Lovark-input.has-github-prompt {
+      bottom: 59px !important;
+    }
+
+    #${PANEL_ID} .Lovark-github-prompt[hidden] {
+      display: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-github-prompt {
+      position: absolute !important;
+      left: 11px !important;
+      right: 11px !important;
+      bottom: 7px !important;
+      min-height: 44px !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      padding: 7px 8px 7px 10px !important;
+      background: #212120 !important;
+      border: 1px solid #2b2b2a !important;
+      border-radius: 8px !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16) !important;
+      color: #f1f1ef !important;
+      z-index: 5 !important;
+    }
+
+    #${PANEL_ID} .Lovark-github-icon {
+      width: 18px !important;
+      min-width: 18px !important;
+      height: 18px !important;
+      display: block !important;
+      color: #d6d6d4 !important;
+      fill: currentColor !important;
+      flex: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-github-title {
+      min-width: 0 !important;
+      flex: 1 1 auto !important;
+      color: #f1f1ef !important;
+      font-family: Inter, Arial, sans-serif !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      line-height: 18px !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+
+    #${PANEL_ID} .Lovark-github-connect,
+    #${PANEL_ID} .Lovark-github-close {
+      flex: none !important;
+      box-sizing: border-box !important;
+      border: 0 !important;
+      outline: none !important;
+      cursor: pointer !important;
+      font-family: Inter, Arial, sans-serif !important;
+    }
+
+    #${PANEL_ID} .Lovark-github-connect {
+      min-width: 70px !important;
+      height: 30px !important;
+      padding: 0 11px !important;
+      border-radius: 6px !important;
+      background: #f1f1ef !important;
+      color: #272726 !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      line-height: 30px !important;
+      text-align: center !important;
+    }
+
+    #${PANEL_ID} .Lovark-github-connect:hover {
+      background: #ffffff !important;
+    }
+
+    #${PANEL_ID} .Lovark-github-close {
+      width: 28px !important;
+      min-width: 28px !important;
+      height: 28px !important;
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border-radius: 6px !important;
+      background: transparent !important;
+      color: #858583 !important;
+    }
+
+    #${PANEL_ID} .Lovark-github-close:hover {
+      background: #2b2b2a !important;
+      color: #f1f1ef !important;
+    }
+
+    #${PANEL_ID} .Lovark-github-close svg {
+      width: 14px !important;
+      height: 14px !important;
+      display: block !important;
+      fill: none !important;
+      stroke: currentColor !important;
+      stroke-width: 1.8 !important;
+      stroke-linecap: round !important;
+      stroke-linejoin: round !important;
+    }
+
     #${PANEL_ID} .Lovark-input {
       position: absolute !important;
       left: 11px !important;
@@ -420,6 +526,91 @@
     questionInput.rows = 1;
     questionInput.placeholder = "Pergunte à Lovark...";
     questionInput.setAttribute("aria-label", "Pergunte à Lovark");
+
+    const githubPrompt = document.createElement("div");
+    githubPrompt.className = "Lovark-github-prompt";
+    githubPrompt.hidden = true;
+    githubPrompt.setAttribute("role", "group");
+    githubPrompt.setAttribute("aria-label", "Conectar GitHub");
+
+    const githubIcon = document.createElement("svg");
+    githubIcon.className = "Lovark-github-icon";
+    githubIcon.setAttribute("viewBox", "0 0 16 16");
+    githubIcon.setAttribute("aria-hidden", "true");
+    githubIcon.innerHTML = '<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path>';
+
+    const githubTitle = document.createElement("div");
+    githubTitle.className = "Lovark-github-title";
+    githubTitle.textContent = "Conectar GitHub";
+
+    const githubConnectButton = document.createElement("button");
+    githubConnectButton.className = "Lovark-github-connect";
+    githubConnectButton.type = "button";
+    githubConnectButton.textContent = "Conectar";
+    githubConnectButton.setAttribute("aria-label", "Conectar GitHub");
+
+    const githubCloseButton = document.createElement("button");
+    githubCloseButton.className = "Lovark-github-close";
+    githubCloseButton.type = "button";
+    githubCloseButton.setAttribute("aria-label", "Fechar");
+    githubCloseButton.title = "Fechar";
+    githubCloseButton.innerHTML = `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m6 6 12 12"></path>
+        <path d="M18 6 6 18"></path>
+      </svg>
+    `;
+
+    githubPrompt.appendChild(githubIcon);
+    githubPrompt.appendChild(githubTitle);
+    githubPrompt.appendChild(githubConnectButton);
+    githubPrompt.appendChild(githubCloseButton);
+
+    let lastQuestionValue = "";
+    let dismissedGithubValue = null;
+
+    const isValidGithubUrl = (value) => {
+      if (!value.startsWith("https://github.com/")) return false;
+
+      try {
+        const url = new URL(value);
+        return (
+          url.protocol === "https:" &&
+          (url.hostname === "github.com" || url.hostname === "www.github.com")
+        );
+      } catch {
+        return false;
+      }
+    };
+
+    const updateGithubPrompt = () => {
+      const value = questionInput.value;
+      if (value !== lastQuestionValue) {
+        dismissedGithubValue = null;
+        lastQuestionValue = value;
+      }
+
+      const shouldShow = isValidGithubUrl(value) && dismissedGithubValue !== value;
+      githubPrompt.hidden = !shouldShow;
+      inputBox.classList.toggle("has-github-prompt", shouldShow);
+    };
+
+    githubCloseButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      dismissedGithubValue = questionInput.value;
+      githubPrompt.hidden = true;
+      inputBox.classList.remove("has-github-prompt");
+      questionInput.focus();
+    });
+
+    githubConnectButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      // No GitHub connection flow exists in the current extension, so do not
+      // simulate a successful connection or create credentials.
+    });
+
 
     const addButton = document.createElement("button");
     addButton.className = "Lovark-input-action Lovark-add";
@@ -933,6 +1124,7 @@
     inputBox.appendChild(voiceStatus);
     inputBox.appendChild(micButton);
     inputBox.appendChild(sendButton);
+    panel.appendChild(githubPrompt);
 
     const MIN_INPUT_HEIGHT = 95;
     const MAX_INPUT_PARAGRAPHS = 10;
@@ -975,12 +1167,14 @@
     };
 
     questionInput.addEventListener("input", resizeQuestionArea);
+    questionInput.addEventListener("input", updateGithubPrompt);
 
     panel.appendChild(header);
     panel.appendChild(inputBox);
     document.documentElement.appendChild(panel);
     resizeQuestionArea();
     renderVoiceState();
+    updateGithubPrompt();
 
     teardownCurrentPanel = () => {
       window.clearTimeout(noticeTimer);
