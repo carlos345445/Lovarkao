@@ -7,10 +7,6 @@
   const INTER_FONT_URL = chrome.runtime.getURL("fonts/Inter-Regular.woff2");
   const hostname = window.location.hostname;
   const LOVABLE_COUNTER_TEXT = "999999 | Lovark";
-  const LOVABLE_CREDIT_ARROW_PATHS = [
-    "9.46967",
-    "15.5302",
-  ];
   let teardownCurrentPanel = null;
   let addedPageShiftClass = false;
   let lovableCreditObserver = null;
@@ -40,15 +36,6 @@
     );
   }
 
-  function isLovableCreditArrow(svg) {
-    if (svg?.tagName !== "SVG") return false;
-    const path = svg.querySelector("path");
-    const pathData = path?.getAttribute("d") || "";
-    return LOVABLE_CREDIT_ARROW_PATHS.every((part) =>
-      pathData.includes(part)
-    );
-  }
-
   function getCreditParagraphFromParent(parent) {
     if (
       !parent ||
@@ -57,11 +44,13 @@
     ) {
       return null;
     }
+
     const paragraph = parent.querySelector(":scope > p");
     if (!paragraph) return null;
 
-    const svg = parent.querySelector(":scope > svg");
-    return isLovableCreditArrow(svg) ? paragraph : null;
+    // O Lovable identifica a ação de créditos pelo texto "Upgrade".
+    // A detecção textual é mais estável entre versões do ícone/SVG e navegadores.
+    return paragraph.textContent?.trim() === "Upgrade" ? paragraph : null;
   }
 
   function getCreditParagraph(node) {
@@ -71,8 +60,6 @@
     if (paragraph) {
       return getCreditParagraphFromParent(paragraph.parentElement);
     }
-    const svg = element?.closest?.("svg");
-    if (svg) return getCreditParagraphFromParent(svg.parentElement);
     return getCreditParagraphFromParent(element);
   }
 
@@ -408,8 +395,9 @@
   function startLovableCreditEffectController() {
     if (hostname.toLowerCase() !== "lovable.dev") return;
 
-    // O estado inicial é avaliado uma única vez. O efeito só fica ativo
-    // quando o painel está aberto, a URL é um projeto HTTPS e há ligação.
+    // O efeito só fica ativo num projeto HTTPS, online e com o painel aberto.
+    // A identificação do contador é feita pelo texto "Upgrade", sem depender
+    // do desenho do ícone/SVG usado pelo Lovable.
     syncLovableCreditEffect();
 
     // Online/offline altera apenas o estado do efeito; não cria timers.
