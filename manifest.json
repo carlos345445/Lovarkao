@@ -15,7 +15,8 @@
   ],
   "host_permissions": [
     "https://lovable.dev/*",
-    "https://*.lovable.dev/*"
+    "https://*.lovable.dev/*",
+    "<all_urls>"
   ],
   "action": {
     "default_title": "Abrir/fechar LovaBurst",
@@ -27,8 +28,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://lovable.dev/*",
-        "https://*.lovable.dev/*"
+        "<all_urls>"
       ],
       "js": [
         "content.js"
@@ -42,8 +42,7 @@
         "icons/verified-badge.png"
       ],
       "matches": [
-        "https://lovable.dev/*",
-        "https://*.lovable.dev/*"
+        "<all_urls>"
       ]
     }
   ],
