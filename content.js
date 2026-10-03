@@ -91,7 +91,7 @@
       color: #f1f1ef !important;
       font-family: inherit !important;
       font-size: 14px !important;
-      font-weight: 500 !important;
+      font-weight: 700 !important;
       line-height: 16px !important;
     }
 
