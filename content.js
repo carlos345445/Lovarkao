@@ -1368,7 +1368,7 @@
       font-family: Inter, Arial, sans-serif !important;
     }
 
-    /* Cabeçalho: a única moldura azul fica nesta zona. */
+    /* Cabeçalho: a única moldura roxa fica nesta zona. */
     #${PANEL_ID} .Lovark-response-header {
       display: flex !important;
       align-items: center !important;
@@ -1431,7 +1431,6 @@
       border: 1px solid #41413f !important;
       background: transparent !important;
       color: #eeeeee !important;
-      font-family: Inter, Arial, sans-serif !important;
       font-family: "Inter", Arial, sans-serif !important;
       font-size: 12px !important;
       font-weight: 600 !important;
