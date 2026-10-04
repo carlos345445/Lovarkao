@@ -2579,7 +2579,38 @@
       setServicePromptVisible(showGithub || showChatGPT || showSupabase);
     };
 
-    const attachDismissHandler = (serviceKey, detection)
+    const attachDismissHandler = (serviceKey, detection) => {
+      detection.closeButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        dismissedServiceValues[serviceKey] = questionInput.value;
+        updateDetectedServicePrompts();
+        questionInput.focus();
+      });
+    };
+
+    attachDismissHandler("github", githubDetection);
+    attachDismissHandler("chatGPT", chatGPTDetection);
+    attachDismissHandler("supabase", supabaseDetection);
+
+    const addButton = document.createElement("button");
+    addButton.className = "Lovark-input-action Lovark-add";
+    addButton.type = "button";
+    addButton.setAttribute("aria-label", "Adicionar");
+    addButton.setAttribute("aria-pressed", "false");
+    addButton.innerHTML = `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 5v14"></path>
+        <path d="M5 12h14"></path>
+      </svg>
+    `;
+
+    const addMenu = document.createElement("div");
+    addMenu.className = "Lovark-add-menu";
+    addMenu.hidden = true;
+    addMenu.setAttribute("role", "menu");
+    addMenu.setAttribute("aria-label", "Adicionar ao pedido");
+
     const addMenuItems = [
       {
         label: "Projeto",
