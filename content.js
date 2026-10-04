@@ -118,11 +118,32 @@
     if (!parent || !parent.querySelector(":scope > svg")) return false;
 
     const parentText = parent.textContent.trim();
+    if (!parentText) return false;
+
+    // Deteção estrutural e independente do idioma:
+    // procura um contador inteiro entre 0 e 9.999.999 seguido de texto.
+    // Não depende de palavras como "credits", "left" ou "créditos".
+    const numberMatch = parentText.match(
+      /(?:^|\\s)(\\d{1,7}(?:[.,]\\d{3})*)(?=\\s|$)/
+    );
+    if (!numberMatch) return false;
+
+    const normalizedNumber = numberMatch[1].replace(/[.,]/g, "");
+    const creditValue = Number(normalizedNumber);
+    if (!Number.isInteger(creditValue) || creditValue < 0 || creditValue > 9999999) {
+      return false;
+    }
+
+    const remainingText = parentText
+      .replace(numberMatch[0], " ")
+      .replace(/\\s+/g, " ")
+      .trim();
+
+    // Depois do número deve existir texto linguístico; assim a deteção
+    // funciona com PT, EN, FR e outros idiomas sem lista de palavras-chave.
     return (
-      parentText &&
-      (/\bleft\b/i.test(parentText) ||
-        /\bcredits?\b/i.test(parentText) ||
-        /\bcréditos?\b/i.test(parentText))
+      /\\p{L}/u.test(remainingText) &&
+      !/\\d/.test(remainingText)
     );
   }
 
