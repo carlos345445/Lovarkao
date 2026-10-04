@@ -1360,7 +1360,7 @@
       min-width: 0 !important;
       box-sizing: border-box !important;
       overflow: hidden !important;
-      border: 1px solid #3f4f72 !important;
+      border: 0 !important;
       border-radius: 14px !important;
       background: #242424 !important;
       color: #f1f1ef !important;
@@ -1368,6 +1368,7 @@
       font-family: Inter, Arial, sans-serif !important;
     }
 
+    /* Cabeçalho: a única moldura azul fica nesta zona. */
     #${PANEL_ID} .Lovark-response-header {
       display: flex !important;
       align-items: center !important;
@@ -1376,6 +1377,9 @@
       min-height: 48px !important;
       padding: 8px 12px 8px 16px !important;
       box-sizing: border-box !important;
+      border: 1px solid #3159a9 !important;
+      border-radius: 14px 14px 10px 10px !important;
+      background: #242424 !important;
     }
 
     #${PANEL_ID} .Lovark-response-title {
@@ -1404,12 +1408,17 @@
       white-space: nowrap !important;
     }
 
+    /* Rodapé: sem azul. Usa o cinza já utilizado nas bordas da extensão. */
     #${PANEL_ID} .Lovark-response-actions {
       display: flex !important;
       width: 100% !important;
       gap: 10px !important;
-      padding: 0 12px 11px !important;
+      padding: 11px 12px 11px !important;
       box-sizing: border-box !important;
+      border: 1px solid #3b3b39 !important;
+      border-top: 0 !important;
+      border-radius: 0 0 14px 14px !important;
+      background: #242424 !important;
     }
 
     #${PANEL_ID} .Lovark-response-action {
@@ -1419,7 +1428,7 @@
       height: 32px !important;
       padding: 0 12px !important;
       border-radius: 999px !important;
-      border: 1px solid #555555 !important;
+      border: 1px solid #41413f !important;
       background: transparent !important;
       color: #eeeeee !important;
       font-family: Inter, Arial, sans-serif !important;
@@ -1433,7 +1442,7 @@
 
     #${PANEL_ID} .Lovark-response-details:hover {
       background: #2c2c2c !important;
-      border-color: #686868 !important;
+      border-color: #626261 !important;
     }
 
     #${PANEL_ID} .Lovark-response-preview {
