@@ -209,15 +209,35 @@
   }
 
   function isLovableUpgradeElement(element) {
-    return (
-      element?.tagName === "DIV" &&
-      element.classList.contains("flex") &&
-      element.classList.contains("items-center") &&
-      element.classList.contains("gap-px") &&
-      element.children.length === 2 &&
-      element.children[0]?.tagName === "P" &&
-      element.children[0]?.textContent?.trim().toLowerCase() === "upgrade" &&
-      element.children[1]?.tagName === "SVG"
+    if (
+      element?.tagName !== "DIV" ||
+      element.getAttribute("role") !== null ||
+      !element.classList.contains("flex") ||
+      !element.classList.contains("items-center") ||
+      !element.classList.contains("gap-px") ||
+      element.children.length !== 2 ||
+      element.children[0]?.tagName !== "P" ||
+      element.children[1]?.tagName !== "SVG" ||
+      element.children[0]?.textContent?.trim().toLowerCase() !== "upgrade"
+    ) {
+      return false;
+    }
+
+    const header = element.parentElement;
+    const card = header?.parentElement;
+
+    return Boolean(
+      header?.tagName === "DIV" &&
+      header.classList.contains("flex") &&
+      header.classList.contains("items-center") &&
+      header.classList.contains("justify-between") &&
+      header.children.length === 2 &&
+      header.children[0]?.tagName === "P" &&
+      header.children[0]?.textContent?.trim().toLowerCase() === "credits" &&
+      card?.tagName === "DIV" &&
+      card.getAttribute("role") === "menuitem" &&
+      card.classList.contains("group/credits-card") &&
+      card.querySelector(':scope > div[data-slot="meter"]')
     );
   }
 
@@ -538,7 +558,7 @@
     const upgradeElements = new Set();
 
     if (becameActive) {
-      for (const element of document.querySelectorAll("div.flex.items-center.gap-px")) {
+      for (const element of document.querySelectorAll('div.flex.items-center.gap-px')) {
         if (isLovableUpgradeElement(element)) upgradeElements.add(element);
       }
       collectCreditParagraphs(document.documentElement, paragraphs);
