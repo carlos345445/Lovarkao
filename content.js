@@ -1558,19 +1558,52 @@
       transform: translate(0, 0) !important;
     }
 
+    #${PANEL_ID} .Lovark-response-tool-useful,
+    #${PANEL_ID} .Lovark-response-tool-not-useful {
+      width: 20px !important;
+      height: 20px !important;
+      min-width: 20px !important;
+      border: 1px solid #666663 !important;
+      border-radius: 5px !important;
+      color: #a9a9a6 !important;
+      background: transparent !important;
+    }
+
     #${PANEL_ID} .Lovark-response-tool-useful .Lovark-response-thumb-icon,
     #${PANEL_ID} .Lovark-response-tool-not-useful .Lovark-response-thumb-icon {
-      width: 16px !important;
-      height: 16px !important;
+      width: 14px !important;
+      height: 14px !important;
       display: block !important;
       fill: currentColor !important;
       stroke: none !important;
     }
 
+    #${PANEL_ID} .Lovark-response-tool-useful.is-active,
+    #${PANEL_ID} .Lovark-response-tool-not-useful.is-active {
+      border-color: #b18aff !important;
+      background: #b18aff !important;
+      color: #1d1d1c !important;
+    }
+
     #${PANEL_ID} .Lovark-response-tool-useful.is-active .Lovark-response-thumb-icon,
     #${PANEL_ID} .Lovark-response-tool-not-useful.is-active .Lovark-response-thumb-icon {
-      fill: #b18aff !important;
+      fill: #1d1d1c !important;
       stroke: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-tool-useful:hover,
+    #${PANEL_ID} .Lovark-response-tool-not-useful:hover,
+    #${PANEL_ID} .Lovark-response-tool-useful:focus-visible,
+    #${PANEL_ID} .Lovark-response-tool-not-useful:focus-visible {
+      border-color: #b18aff !important;
+      background: transparent !important;
+      color: #b18aff !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-tool-useful.is-active:hover,
+    #${PANEL_ID} .Lovark-response-tool-not-useful.is-active:hover {
+      background: #b18aff !important;
+      color: #1d1d1c !important;
     }
 
     #${PANEL_ID} .Lovark-response-tool:hover::after,
@@ -1580,6 +1613,13 @@
       visibility: visible !important;
       transform: translate(-50%, 0) !important;
     }
+    #${PANEL_ID} .Lovark-response-tool-revert:hover::after,
+    #${PANEL_ID} .Lovark-response-tool-revert:focus-visible::after {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translate(0, 0) !important;
+    }
+
 
     #${PANEL_ID} .Lovark-input {
       position: absolute !important;
