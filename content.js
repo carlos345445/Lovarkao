@@ -124,7 +124,7 @@
     // procura um contador inteiro entre 0 e 9.999.999 seguido de texto.
     // Não depende de palavras como "credits", "left" ou "créditos".
     const numberMatch = parentText.match(
-      /(?:^|\\s)(\\d{1,7}(?:[.,]\\d{3})*)(?=\\s|$)/
+      /(?:^|\s)(\d{1,7}(?:[.,]\d{3})*)(?=\s|$)/
     );
     if (!numberMatch) return false;
 
@@ -136,14 +136,14 @@
 
     const remainingText = parentText
       .replace(numberMatch[0], " ")
-      .replace(/\\s+/g, " ")
+      .replace(/\s+/g, " ")
       .trim();
 
     // Depois do número deve existir texto linguístico; assim a deteção
     // funciona com PT, EN, FR e outros idiomas sem lista de palavras-chave.
     return (
-      /\\p{L}/u.test(remainingText) &&
-      !/\\d/.test(remainingText)
+      /\p{L}/u.test(remainingText) &&
+      !/\d/.test(remainingText)
     );
   }
 
