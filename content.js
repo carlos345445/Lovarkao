@@ -1458,12 +1458,12 @@
     #${PANEL_ID} .Lovark-response-toolbar {
       width: max-content !important;
       max-width: 100% !important;
-      min-height: 27px !important;
+      min-height: 22px !important;
       display: flex !important;
       align-items: center !important;
-      gap: 2px !important;
-      margin: 3px 0 0 2px !important;
-      padding: 1px 2px !important;
+      gap: 5px !important;
+      margin: 3px 0 0 1px !important;
+      padding: 0 !important;
       box-sizing: border-box !important;
       opacity: 0 !important;
       visibility: hidden !important;
@@ -1482,22 +1482,22 @@
 
     #${PANEL_ID} .Lovark-response-tool {
       position: relative !important;
-      width: 27px !important;
-      height: 27px !important;
-      min-width: 27px !important;
+      width: 20px !important;
+      height: 20px !important;
+      min-width: 20px !important;
       padding: 0 !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
       box-sizing: border-box !important;
-      border: 1px solid transparent !important;
-      border-radius: 7px !important;
+      border: 0 !important;
+      border-radius: 0 !important;
       outline: none !important;
       background: transparent !important;
       color: #a9a9a6 !important;
       cursor: pointer !important;
       font-family: "Inter", Arial, sans-serif !important;
-      transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease !important;
+      transition: color 120ms ease !important;
     }
 
     #${PANEL_ID} .Lovark-response-tool svg {
@@ -1512,16 +1512,12 @@
     }
 
     #${PANEL_ID} .Lovark-response-tool:hover,
-    #${PANEL_ID} .Lovark-response-tool:focus-visible {
-      border-color: #555553 !important;
-      background: #30302f !important;
-      color: #f1f1ef !important;
-    }
-
+    #${PANEL_ID} .Lovark-response-tool:focus-visible,
     #${PANEL_ID} .Lovark-response-tool.is-active,
     #${PANEL_ID} .Lovark-response-tool.is-copied {
-      border-color: #6c33d4 !important;
-      background: #2b174f !important;
+      border: 0 !important;
+      outline: none !important;
+      background: transparent !important;
       color: #b18aff !important;
     }
 
@@ -3150,14 +3146,14 @@
       const copyToolbarButton = createToolbarButton(
         "Lovark-response-tool-copy",
         "Copiar",
-        `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>`,
+        `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="12" rx="2"></rect><path d="M16 8V6.5A1.5 1.5 0 0 0 14.5 5h-8A1.5 1.5 0 0 0 5 6.5v10A1.5 1.5 0 0 0 6.5 18H8"></path></svg>`,
         async (button) => {
           try {
             await copyMessageToClipboard(userText);
             button.classList.add("is-active", "is-copied");
             button.setAttribute("data-tooltip", "Copiado");
             button.setAttribute("aria-label", "Copiado");
-            button.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>`;
+            button.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="m8 12 2.5 2.5L16 9"></path></svg>`;
             if (button.copyFeedbackTimer) {
               window.clearTimeout(button.copyFeedbackTimer);
             }
