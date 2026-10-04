@@ -1082,8 +1082,8 @@
       position: absolute !important;
       left: 50% !important;
       bottom: calc(7px + var(--Lovark-input-height, 80px) + 6px) !important;
-      width: 36px !important;
-      height: 36px !important;
+      width: 30px !important;
+      height: 30px !important;
       margin: 0 !important;
       padding: 0 !important;
       display: flex !important;
@@ -1124,8 +1124,8 @@
 
     #${PANEL_ID} .Lovark-scroll-down-arrow {
       position: relative !important;
-      width: 16px !important;
-      height: 18px !important;
+      width: 13px !important;
+      height: 15px !important;
       display: block !important;
       pointer-events: none !important;
     }
@@ -1141,25 +1141,25 @@
 
     #${PANEL_ID} .Lovark-scroll-down-shaft {
       top: 1px !important;
-      left: 7px !important;
-      width: 2px !important;
-      height: 13px !important;
+      left: 5.5px !important;
+      width: 1.5px !important;
+      height: 11px !important;
     }
 
     #${PANEL_ID} .Lovark-scroll-down-head-left,
     #${PANEL_ID} .Lovark-scroll-down-head-right {
-      top: 10px !important;
-      width: 8px !important;
-      height: 2px !important;
+      top: 9px !important;
+      width: 7px !important;
+      height: 1.5px !important;
     }
 
     #${PANEL_ID} .Lovark-scroll-down-head-left {
-      left: 1px !important;
+      left: 0.5px !important;
       transform: rotate(45deg) !important;
     }
 
     #${PANEL_ID} .Lovark-scroll-down-head-right {
-      left: 7px !important;
+      left: 5.5px !important;
       transform: rotate(-45deg) !important;
     }
 
@@ -1377,7 +1377,7 @@
       min-height: 48px !important;
       padding: 8px 12px 8px 16px !important;
       box-sizing: border-box !important;
-      border: 1px solid #3159a9 !important;
+      border: 1px solid #6c33d4 !important;
       border-radius: 14px 14px 10px 10px !important;
       background: #242424 !important;
     }
@@ -1432,6 +1432,7 @@
       background: transparent !important;
       color: #eeeeee !important;
       font-family: Inter, Arial, sans-serif !important;
+      font-family: "Inter", Arial, sans-serif !important;
       font-size: 12px !important;
       font-weight: 600 !important;
       line-height: 30px !important;
@@ -1446,9 +1447,9 @@
     }
 
     #${PANEL_ID} .Lovark-response-preview {
-      border-color: #3159a9 !important;
-      background: #172b58 !important;
-      color: #526c9f !important;
+      border-color: #6c33d4 !important;
+      background: #2b174f !important;
+      color: #8d6ad8 !important;
       cursor: default !important;
     }
 
@@ -1871,6 +1872,53 @@
 
     const panel = document.createElement("div");
     panel.id = PANEL_ID;
+    panel.classList.add("notranslate");
+    panel.setAttribute("translate", "no");
+    panel.setAttribute("lang", "en");
+
+    const protectLovarkFromTranslation = (root) => {
+      root.classList.add("notranslate");
+      root.setAttribute("translate", "no");
+      root.querySelectorAll("*").forEach((element) => {
+        element.classList.add("notranslate");
+        element.setAttribute("translate", "no");
+      });
+    };
+
+    protectLovarkFromTranslation(panel);
+
+    const lovarkTranslationObserver = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type === "childList") {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              protectLovarkFromTranslation(node);
+            }
+          });
+        } else if (
+          mutation.type === "attributes" &&
+          mutation.target instanceof Element &&
+          (mutation.attributeName === "translate" ||
+            mutation.attributeName === "class")
+        ) {
+          const element = mutation.target;
+          if (
+            element.getAttribute("translate") !== "no" ||
+            !element.classList.contains("notranslate")
+          ) {
+            element.classList.add("notranslate");
+            element.setAttribute("translate", "no");
+          }
+        }
+      }
+    });
+
+    lovarkTranslationObserver.observe(panel, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ["translate", "class"],
+    });
 
     const messageList = document.createElement("div");
     messageList.className = "Lovark-message-list";
@@ -3172,6 +3220,7 @@
     syncLovableCreditEffect();
 
     teardownCurrentPanel = () => {
+      lovarkTranslationObserver.disconnect();
       window.clearTimeout(noticeTimer);
       window.clearTimeout(servicePromptHideTimer);
       window.clearInterval(profileStatusInterval);
