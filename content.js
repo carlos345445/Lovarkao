@@ -1547,7 +1547,15 @@
     }
 
     #${PANEL_ID} .Lovark-response-tool-revert::after {
+      left: auto !important;
+      right: 0 !important;
       text-align: right !important;
+      transform: translate(0, 3px) !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-tool-revert:hover::after,
+    #${PANEL_ID} .Lovark-response-tool-revert:focus-visible::after {
+      transform: translate(0, 0) !important;
     }
 
     #${PANEL_ID} .Lovark-response-tool-useful .Lovark-response-thumb-icon,
