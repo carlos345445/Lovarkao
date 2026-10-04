@@ -174,12 +174,29 @@
     // sem depender do idioma ou de classes específicas de cor.
     const text = element.querySelector(":scope > span.truncate")?.textContent?.trim() ?? "";
     const numberMatch = text.match(
-      /(?:^|\s)(\d{1,7}(?:[.,]\d{3})*)(?=\s|$)/
+      /(?:^|\s)(\d{1,7}(?:[.,]\d{3})*(?:[.,]\d{1,2})?)(?=\s|$)/
     );
     if (!numberMatch) return false;
 
-    const value = Number(numberMatch[1].replace(/[.,]/g, ""));
-    if (!Number.isInteger(value) || value < 0 || value > 9999999) {
+    const rawNumber = numberMatch[1];
+    const lastSeparator = Math.max(
+      rawNumber.lastIndexOf(","),
+      rawNumber.lastIndexOf(".")
+    );
+    const digitsAfterSeparator =
+      lastSeparator >= 0 ? rawNumber.length - lastSeparator - 1 : 0;
+    const value =
+      lastSeparator >= 0 && digitsAfterSeparator <= 2
+        ? Number(
+            rawNumber
+              .slice(0, lastSeparator)
+              .replace(/[.,]/g, "") +
+              "." +
+              rawNumber.slice(lastSeparator + 1)
+          )
+        : Number(rawNumber.replace(/[.,]/g, ""));
+
+    if (!Number.isFinite(value) || value < 0 || value > 9999999) {
       return false;
     }
 
