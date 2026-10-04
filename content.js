@@ -1787,6 +1787,121 @@
       left: 12px !important;
     }
 
+    #${PANEL_ID} .Lovark-add.is-open {
+      background: #41413f !important;
+      border-color: #737371 !important;
+      color: #f0f0ee !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu {
+      position: absolute !important;
+      left: 8px !important;
+      bottom: calc(7px + 13px + var(--Lovark-mode-height) + 3px) !important;
+      width: 236px !important;
+      max-width: calc(100% - 16px) !important;
+      padding: 4px !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 1px !important;
+      background: #242423 !important;
+      border: 1px solid #41413f !important;
+      border-radius: 8px !important;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.38) !important;
+      z-index: 10 !important;
+      transform-origin: bottom left !important;
+      animation: Lovark-add-menu-in 150ms ease-out both !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu[hidden] {
+      display: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-item {
+      width: 100% !important;
+      min-height: 40px !important;
+      padding: 5px 7px !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      border: 0 !important;
+      border-radius: 6px !important;
+      background: transparent !important;
+      color: #f1f1ef !important;
+      text-align: left !important;
+      cursor: pointer !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-item:hover,
+    #${PANEL_ID} .Lovark-add-menu-item:focus-visible {
+      background: #30302f !important;
+      outline: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-icon {
+      width: 18px !important;
+      height: 18px !important;
+      min-width: 18px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: #c5c5c2 !important;
+      flex: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-icon svg {
+      width: 16px !important;
+      height: 16px !important;
+      display: block !important;
+      fill: none !important;
+      stroke: currentColor !important;
+      stroke-width: 1.7 !important;
+      stroke-linecap: round !important;
+      stroke-linejoin: round !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-copy {
+      min-width: 0 !important;
+      flex: 1 1 auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 1px !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-title {
+      color: #f1f1ef !important;
+      font-size: 11px !important;
+      font-weight: 525 !important;
+      line-height: 14px !important;
+      white-space: nowrap !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-description {
+      color: #9f9e9b !important;
+      font-size: 9px !important;
+      font-weight: 400 !important;
+      line-height: 12px !important;
+      white-space: nowrap !important;
+    }
+
+    @keyframes Lovark-add-menu-in {
+      from {
+        opacity: 0;
+        transform: translateY(5px) scale(0.985);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #${PANEL_ID} .Lovark-add-menu {
+        animation: none !important;
+      }
+    }
+
     #${PANEL_ID} .Lovark-mode-toggle {
       left: auto !important;
       right: var(--Lovark-mode-right) !important;
@@ -2453,10 +2568,100 @@
         <path d="M5 12h14"></path>
       </svg>
     `;
-    addButton.addEventListener("click", () => {
-      const isOpen = addButton.classList.toggle("is-open");
-      addButton.setAttribute("aria-pressed", String(isOpen));
+    const addMenu = document.createElement("div");
+    addMenu.className = "Lovark-add-menu";
+    addMenu.hidden = true;
+    addMenu.setAttribute("role", "menu");
+    addMenu.setAttribute("aria-label", "Adicionar ao pedido");
+
+    const addMenuItems = [
+      {
+        label: "Adicionar ficheiros",
+        description: "Anexe ficheiros ao seu pedido",
+        icon: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5.5 7.5 12a3.5 3.5 0 0 0 5 5l6-6a5 5 0 0 0-7.1-7.1l-6.2 6.2a6.5 6.5 0 0 0 9.2 9.2l5.1-5.1"></path></svg>`,
+      },
+      {
+        label: "Adicionar imagem",
+        description: "Envie uma imagem para analisar",
+        icon: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2"></rect><circle cx="9" cy="10" r="1.5"></circle><path d="m5.5 17 4.5-4 3 2.5 2-2 3.5 3.5"></path></svg>`,
+      },
+      {
+        label: "Importar do GitHub",
+        description: "Adicione um repositório ao pedido",
+        icon: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.2 1.3-4.2-2.1-5.9-2.5M15 22v-3.9c0-1.1.1-1.6-.5-2.2 3.3-.4 6.8-1.6 6.8-7.2a5.6 5.6 0 0 0-1.5-3.9 5.2 5.2 0 0 0-.1-3.8s-1.2-.4-4 1.5a13.7 13.7 0 0 0-7.4 0c-2.8-1.9-4-1.5-4-1.5a5.2 5.2 0 0 0-.1 3.8 5.6 5.6 0 0 0-1.5 3.9c0 5.6 3.5 6.8 6.8 7.2-.6.5-.6 1.1-.5 2.2V22"></path></svg>`,
+      },
+    ];
+
+    for (const item of addMenuItems) {
+      const option = document.createElement("button");
+      option.type = "button";
+      option.className = "Lovark-add-menu-item";
+      option.setAttribute("role", "menuitem");
+
+      const icon = document.createElement("span");
+      icon.className = "Lovark-add-menu-icon";
+      icon.innerHTML = item.icon;
+
+      const copy = document.createElement("span");
+      copy.className = "Lovark-add-menu-copy";
+
+      const title = document.createElement("span");
+      title.className = "Lovark-add-menu-title";
+      title.textContent = item.label;
+
+      const description = document.createElement("span");
+      description.className = "Lovark-add-menu-description";
+      description.textContent = item.description;
+
+      copy.appendChild(title);
+      copy.appendChild(description);
+      option.appendChild(icon);
+      option.appendChild(copy);
+
+      option.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        addButton.classList.remove("is-open");
+        addButton.setAttribute("aria-pressed", "false");
+        addMenu.hidden = true;
+      });
+
+      addMenu.appendChild(option);
+    }
+
+    const setAddMenuOpen = (open) => {
+      addMenu.hidden = !open;
+      addButton.classList.toggle("is-open", open);
+      addButton.setAttribute("aria-pressed", String(open));
+    };
+
+    addButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      setAddMenuOpen(addMenu.hidden);
     });
+
+    const handleAddMenuOutsidePointer = (event) => {
+      if (
+        !addMenu.hidden &&
+        !addMenu.contains(event.target) &&
+        !addButton.contains(event.target)
+      ) {
+        setAddMenuOpen(false);
+      }
+    };
+
+    const handleAddMenuKeydown = (event) => {
+      if (event.key === "Escape" && !addMenu.hidden) {
+        event.preventDefault();
+        event.stopPropagation();
+        setAddMenuOpen(false);
+        addButton.focus();
+      }
+    };
+
+    document.addEventListener("pointerdown", handleAddMenuOutsidePointer, true);
+    document.addEventListener("keydown", handleAddMenuKeydown, true);
 
     const modeDefinitions = {
       build: {
@@ -3385,6 +3590,7 @@
 
     inputBox.appendChild(questionInput);
     inputBox.appendChild(addButton);
+    inputBox.appendChild(addMenu);
     inputBox.appendChild(modeButton);
     inputBox.appendChild(waveform);
     inputBox.appendChild(voiceStatus);
@@ -3470,6 +3676,16 @@
       window.clearInterval(profileStatusInterval);
       for (const timer of copyFeedbackTimers) window.clearTimeout(timer);
       copyFeedbackTimers.clear();
+      document.removeEventListener(
+        "pointerdown",
+        handleAddMenuOutsidePointer,
+        true
+      );
+      document.removeEventListener(
+        "keydown",
+        handleAddMenuKeydown,
+        true
+      );
       document.removeEventListener(
         "pointerdown",
         handleModeMenuOutsidePointer,
