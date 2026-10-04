@@ -1082,8 +1082,8 @@
       position: absolute !important;
       left: 50% !important;
       bottom: calc(7px + var(--Lovark-input-height, 80px) + 6px) !important;
-      width: 30px !important;
-      height: 30px !important;
+      width: 24px !important;
+      height: 24px !important;
       margin: 0 !important;
       padding: 0 !important;
       display: flex !important;
@@ -1124,8 +1124,8 @@
 
     #${PANEL_ID} .Lovark-scroll-down-arrow {
       position: relative !important;
-      width: 13px !important;
-      height: 15px !important;
+      width: 10px !important;
+      height: 12px !important;
       display: block !important;
       pointer-events: none !important;
     }
@@ -1140,16 +1140,16 @@
     }
 
     #${PANEL_ID} .Lovark-scroll-down-shaft {
-      top: 1px !important;
-      left: 5.5px !important;
+      top: 0 !important;
+      left: 4.25px !important;
       width: 1.5px !important;
-      height: 11px !important;
+      height: 8px !important;
     }
 
     #${PANEL_ID} .Lovark-scroll-down-head-left,
     #${PANEL_ID} .Lovark-scroll-down-head-right {
-      top: 9px !important;
-      width: 7px !important;
+      top: 7px !important;
+      width: 5.5px !important;
       height: 1.5px !important;
     }
 
@@ -1159,7 +1159,7 @@
     }
 
     #${PANEL_ID} .Lovark-scroll-down-head-right {
-      left: 5.5px !important;
+      left: 4px !important;
       transform: rotate(-45deg) !important;
     }
 
