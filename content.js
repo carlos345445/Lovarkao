@@ -19,7 +19,7 @@
     "text-tertiary-pulse",
   ];
   const LOVABLE_CREDIT_TRIGGER_SELECTOR =
-    'span[data-trigger-disabled].text-attention-pulse';
+    'span[data-trigger-disabled]';
   let teardownCurrentPanel = null;
   let addedPageShiftClass = false;
   let lovableCreditObserver = null;
@@ -161,12 +161,34 @@
   }
 
   function isLovableCreditTrigger(element) {
-    return (
-      element?.matches?.(LOVABLE_CREDIT_TRIGGER_SELECTOR) &&
-      Boolean(element.querySelector(":scope > svg")) &&
-      Boolean(element.querySelector(":scope > span.truncate")) &&
-      Boolean(element.querySelector(':scope > span[aria-hidden="true"]'))
+    if (
+      !element?.matches?.(LOVABLE_CREDIT_TRIGGER_SELECTOR) ||
+      !Boolean(element.querySelector(":scope > svg")) ||
+      !Boolean(element.querySelector(":scope > span.truncate")) ||
+      !Boolean(element.querySelector(':scope > span[aria-hidden="true"]'))
+    ) {
+      return false;
+    }
+
+    // Deteção estrutural: número de 0 a 9.999.999 + texto,
+    // sem depender do idioma ou de classes específicas de cor.
+    const text = element.querySelector(":scope > span.truncate")?.textContent?.trim() ?? "";
+    const numberMatch = text.match(
+      /(?:^|\s)(\d{1,7}(?:[.,]\d{3})*)(?=\s|$)/
     );
+    if (!numberMatch) return false;
+
+    const value = Number(numberMatch[1].replace(/[.,]/g, ""));
+    if (!Number.isInteger(value) || value < 0 || value > 9999999) {
+      return false;
+    }
+
+    const remainingText = text
+      .replace(numberMatch[0], " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    return /\p{L}/u.test(remainingText) && !/\d/.test(remainingText);
   }
 
   function getLovableCreditTrigger(node) {
