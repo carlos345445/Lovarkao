@@ -1797,9 +1797,9 @@
       position: absolute !important;
       left: 8px !important;
       bottom: calc(7px + 13px + var(--Lovark-mode-height) + 3px) !important;
-      width: 222px !important;
+      width: 218px !important;
       max-width: calc(100% - 16px) !important;
-      max-height: 300px !important;
+      max-height: 270px !important;
       padding: 4px !important;
       box-sizing: border-box !important;
       display: flex !important;
@@ -1817,6 +1817,67 @@
     }
 
     #${PANEL_ID} .Lovark-add-menu[hidden] {
+      display: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-search {
+      height: 30px !important;
+      min-height: 30px !important;
+      padding: 0 7px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+      box-sizing: border-box !important;
+      flex: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-search-icon {
+      width: 14px !important;
+      height: 14px !important;
+      min-width: 14px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: #858583 !important;
+      flex: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-search-icon svg {
+      width: 14px !important;
+      height: 14px !important;
+      display: block !important;
+      fill: currentColor !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-search-input {
+      width: 100% !important;
+      min-width: 0 !important;
+      height: 26px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: 0 !important;
+      outline: none !important;
+      background: transparent !important;
+      color: #e8e8e5 !important;
+      font-family: Inter, Arial, sans-serif !important;
+      font-size: 11px !important;
+      line-height: 26px !important;
+      box-sizing: border-box !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-search-input::placeholder {
+      color: #858583 !important;
+      opacity: 1 !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-search-separator {
+      height: 1px !important;
+      margin: 0 0 3px !important;
+      background: #3b3b39 !important;
+      flex: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-item[hidden] {
       display: none !important;
     }
 
@@ -2611,6 +2672,31 @@
     addMenu.setAttribute("role", "menu");
     addMenu.setAttribute("aria-label", "Adicionar ao pedido");
 
+    const addMenuSearch = document.createElement("div");
+    addMenuSearch.className = "Lovark-add-menu-search";
+
+    const addMenuSearchIcon = document.createElement("span");
+    addMenuSearchIcon.className = "Lovark-add-menu-search-icon";
+    addMenuSearchIcon.setAttribute("aria-hidden", "true");
+    addMenuSearchIcon.innerHTML = '<svg viewBox="0 0 24 24"><path d="M17.25 11a6.25 6.25 0 1 0-12.5 0 6.25 6.25 0 0 0 12.5 0m1.5 0c0 1.87-.663 3.585-1.766 4.924l4.046 4.046a.75.75 0 1 1-1.06 1.06l-4.046-4.046A7.75 7.75 0 1 1 18.75 11"></path></svg>';
+
+    const addMenuSearchInput = document.createElement("input");
+    addMenuSearchInput.type = "text";
+    addMenuSearchInput.className = "Lovark-add-menu-search-input";
+    addMenuSearchInput.placeholder = "Pesquisar...";
+    addMenuSearchInput.setAttribute("aria-label", "Pesquisar");
+    addMenuSearchInput.autocomplete = "off";
+    addMenuSearchInput.spellcheck = false;
+
+    addMenuSearch.appendChild(addMenuSearchIcon);
+    addMenuSearch.appendChild(addMenuSearchInput);
+    addMenu.appendChild(addMenuSearch);
+
+    const addMenuSearchSeparator = document.createElement("div");
+    addMenuSearchSeparator.className = "Lovark-add-menu-search-separator";
+    addMenuSearchSeparator.setAttribute("role", "separator");
+    addMenu.appendChild(addMenuSearchSeparator);
+
     const addMenuItems = [
       {
         label: "Projeto",
@@ -2648,6 +2734,7 @@
       option.type = "button";
       option.className = "Lovark-add-menu-item";
       option.setAttribute("role", "menuitem");
+      option.dataset.searchLabel = item.label.toLocaleLowerCase("pt-PT");
 
       const icon = document.createElement("span");
       icon.className = "Lovark-add-menu-icon";
@@ -2691,10 +2778,27 @@
       addMenu.appendChild(option);
     }
 
+    const filterAddMenuItems = () => {
+      const query = addMenuSearchInput.value.trim().toLocaleLowerCase("pt-PT");
+      for (const option of addMenu.querySelectorAll(".Lovark-add-menu-item")) {
+        option.hidden = Boolean(query) && !option.dataset.searchLabel.includes(query);
+      }
+    };
+
+    addMenuSearchInput.addEventListener("input", filterAddMenuItems);
+
     const setAddMenuOpen = (open) => {
       addMenu.hidden = !open;
       addButton.classList.toggle("is-open", open);
       addButton.setAttribute("aria-pressed", String(open));
+      if (open) {
+        addMenuSearchInput.value = "";
+        filterAddMenuItems();
+        window.requestAnimationFrame(() => addMenuSearchInput.focus());
+      } else {
+        addMenuSearchInput.value = "";
+        filterAddMenuItems();
+      }
     };
 
     addButton.addEventListener("click", (event) => {
