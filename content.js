@@ -1546,10 +1546,23 @@
       z-index: 30 !important;
     }
 
-    #${PANEL_ID} .Lovark-response-tool-useful.is-active svg,
-    #${PANEL_ID} .Lovark-response-tool-not-useful.is-active svg {
+    #${PANEL_ID} .Lovark-response-tool-revert::after {
+      text-align: right !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-tool-useful .Lovark-response-thumb-icon,
+    #${PANEL_ID} .Lovark-response-tool-not-useful .Lovark-response-thumb-icon {
+      width: 16px !important;
+      height: 16px !important;
+      display: block !important;
+      fill: currentColor !important;
+      stroke: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-tool-useful.is-active .Lovark-response-thumb-icon,
+    #${PANEL_ID} .Lovark-response-tool-not-useful.is-active .Lovark-response-thumb-icon {
       fill: #b18aff !important;
-      stroke: #b18aff !important;
+      stroke: none !important;
     }
 
     #${PANEL_ID} .Lovark-response-tool:hover::after,
@@ -3133,7 +3146,7 @@
       const usefulButton = createToolbarButton(
         "Lovark-response-tool-useful",
         "Útil",
-        `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v10H4a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h3Z"/><path d="M7 10l4-8c.4-.8 1.4-1.2 2.2-.7.7.4 1 1.2.8 2L13 9h5.6a2 2 0 0 1 2 2.4l-1.1 6A2 2 0 0 1 17.5 19H7"/></svg>`,
+        `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="Lovark-response-thumb-icon"><path d="M13.8555 3.25C15.8222 3.25 17.0372 5.39554 16.0254 7.08203L15.3252 8.25H16.5693C19.222 8.25029 21.0359 10.9295 20.0508 13.3926L18.4512 17.3926C17.8817 18.8163 16.5021 19.75 14.9688 19.75H7C4.92893 19.75 3.25 18.0711 3.25 16V12C3.25 9.92893 4.92893 8.25 7 8.25H8.63867L11.8799 4.19922C12.36 3.59921 13.087 3.25006 13.8555 3.25ZM13.8555 4.75C13.5425 4.75006 13.2463 4.89236 13.0508 5.13672L9.75 9.2627V18.25H14.9688C15.8886 18.25 16.7158 17.6899 17.0576 16.8359L18.6582 12.8359C19.2493 11.3581 18.1609 9.75029 16.5693 9.75H14C13.7298 9.75 13.4808 9.60427 13.3477 9.36914C13.2147 9.13414 13.2176 8.84585 13.3564 8.61426L14.7393 6.31055C15.1513 5.62383 14.6563 4.75 13.8555 4.75ZM4.75 16C4.75 17.2426 5.75736 18.25 7 18.25H8.25V9.75H7C5.75736 9.75 4.75 10.7574 4.75 12V16Z"/></svg>`,
         (button) => {
           button.classList.toggle("is-active");
           notUsefulButton.classList.remove("is-active");
@@ -3143,7 +3156,7 @@
       const notUsefulButton = createToolbarButton(
         "Lovark-response-tool-not-useful",
         "Não é útil",
-        `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14V4H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3Z"/><path d="M7 14l4 8c.4.8 1.4 1.2 2.2.7.7-.4 1-1.2.8-2L13 15h5.6a2 2 0 0 0 2-2.4l-1.1-6A2 2 0 0 0 17.5 5H7"/></svg>`,
+        `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="Lovark-response-thumb-icon"><path d="M13.8555 3.25C15.8222 3.25 17.0372 5.39554 16.0254 7.08203L15.3252 8.25H16.5693C19.222 8.25029 21.0359 10.9295 20.0508 13.3926L18.4512 17.3926C17.8817 18.8163 16.5021 19.75 14.9688 19.75H7C4.92893 19.75 3.25 18.0711 3.25 16V12C3.25 9.92893 4.92893 8.25 7 8.25H8.63867L11.8799 4.19922C12.36 3.59921 13.087 3.25006 13.8555 3.25ZM13.8555 4.75C13.5425 4.75006 13.2463 4.89236 13.0508 5.13672L9.75 9.2627V18.25H14.9688C15.8886 18.25 16.7158 17.6899 17.0576 16.8359L18.6582 12.8359C19.2493 11.3581 18.1609 9.75029 16.5693 9.75H14C13.7298 9.75 13.4808 9.60427 13.3477 9.36914C13.2147 9.13414 13.2176 8.84585 13.3564 8.61426L14.7393 6.31055C15.1513 5.62383 14.6563 4.75 13.8555 4.75ZM4.75 16C4.75 17.2426 5.75736 18.25 7 18.25H8.25V9.75H7C5.75736 9.75 4.75 10.7574 4.75 12V16Z" transform="rotate(180 12 12)"/></svg>`,
         (button) => {
           button.classList.toggle("is-active");
           usefulButton.classList.remove("is-active");
