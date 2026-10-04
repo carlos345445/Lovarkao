@@ -1329,6 +1329,7 @@
       font-weight: 525 !important;
       line-height: 16px !important;
       white-space: nowrap !important;
+      text-align: center !important;
       opacity: 0 !important;
       visibility: hidden !important;
       pointer-events: none !important;
@@ -1543,6 +1544,12 @@
       pointer-events: none !important;
       transition: opacity 110ms ease, transform 110ms ease, visibility 110ms ease !important;
       z-index: 30 !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-tool-useful.is-active svg,
+    #${PANEL_ID} .Lovark-response-tool-not-useful.is-active svg {
+      fill: #b18aff !important;
+      stroke: #b18aff !important;
     }
 
     #${PANEL_ID} .Lovark-response-tool:hover::after,
