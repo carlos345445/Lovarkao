@@ -1563,8 +1563,8 @@
       width: 20px !important;
       height: 20px !important;
       min-width: 20px !important;
-      border: 1px solid #666663 !important;
-      border-radius: 5px !important;
+      border: 0 !important;
+      border-radius: 0 !important;
       color: #a9a9a6 !important;
       background: transparent !important;
     }
@@ -1580,7 +1580,8 @@
 
     #${PANEL_ID} .Lovark-response-tool-useful.is-active,
     #${PANEL_ID} .Lovark-response-tool-not-useful.is-active {
-      border-color: #b18aff !important;
+      border: 0 !important;
+      border-radius: 5px !important;
       background: #b18aff !important;
       color: #1d1d1c !important;
     }
@@ -1595,7 +1596,7 @@
     #${PANEL_ID} .Lovark-response-tool-not-useful:hover,
     #${PANEL_ID} .Lovark-response-tool-useful:focus-visible,
     #${PANEL_ID} .Lovark-response-tool-not-useful:focus-visible {
-      border-color: #b18aff !important;
+      border: 0 !important;
       background: transparent !important;
       color: #b18aff !important;
     }
@@ -1638,7 +1639,7 @@
       border: 0 !important;
       outline: none !important;
       border-radius: 8px !important;
-      overflow: hidden !important;
+      overflow: visible !important;
       transition: height 120ms ease !important;
     }
 
