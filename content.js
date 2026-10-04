@@ -1547,11 +1547,11 @@
     }
 
     #${PANEL_ID} .Lovark-response-tool-revert::after {
-      left: auto !important;
-      right: 0 !important;
-      text-align: right !important;
+      left: calc(100% + 7px) !important;
+      right: auto !important;
+      text-align: left !important;
       transform: translate(0, 3px) !important;
-      transform-origin: top right !important;
+      transform-origin: top left !important;
     }
 
     #${PANEL_ID} .Lovark-response-tool-revert:hover::after,
