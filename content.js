@@ -217,8 +217,15 @@
       !element.classList.contains("gap-px") ||
       element.children.length !== 2 ||
       element.children[0]?.tagName !== "P" ||
-      element.children[1]?.tagName !== "SVG" ||
-      element.children[0]?.textContent?.trim().toLowerCase() !== "upgrade"
+      element.children[1]?.tagName !== "SVG"
+    ) {
+      return false;
+    }
+
+    const upgradeText = element.children[0]?.textContent?.trim().toLowerCase();
+    if (
+      upgradeText !== "upgrade" &&
+      upgradeText !== LOVABLE_COUNTER_TEXT.toLowerCase()
     ) {
       return false;
     }
@@ -237,8 +244,15 @@
       card?.tagName === "DIV" &&
       card.getAttribute("role") === "menuitem" &&
       card.classList.contains("group/credits-card") &&
-      card.querySelector(':scope > div[data-slot="meter"]')
+      card.querySelector(':scope > div > [data-slot="meter"]')
     );
+  }
+
+  function getLovableUpgradeElement(node) {
+    const element =
+      node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
+    const candidate = element?.closest?.("div.flex.items-center.gap-px");
+    return isLovableUpgradeElement(candidate) ? candidate : null;
   }
 
   function applyLovableUpgradeElement(element) {
@@ -585,12 +599,16 @@
 
         const changedTrigger = getLovableCreditTrigger(node);
         if (changedTrigger) creditTriggers.add(changedTrigger);
+
+        const changedUpgrade = getLovableUpgradeElement(node);
+        if (changedUpgrade) upgradeElements.add(changedUpgrade);
       }
       for (const node of addedNodes) {
         collectCreditParagraphs(node, paragraphs);
         collectCreditMeters(node, meters);
         collectLovableCreditTriggers(node, creditTriggers);
-        if (isLovableUpgradeElement(node)) upgradeElements.add(node);
+        const addedUpgrade = getLovableUpgradeElement(node);
+        if (addedUpgrade) upgradeElements.add(addedUpgrade);
         for (const element of node.querySelectorAll?.("div.flex.items-center.gap-px") ?? []) {
           if (isLovableUpgradeElement(element)) upgradeElements.add(element);
         }
