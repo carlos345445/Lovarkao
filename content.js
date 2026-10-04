@@ -1797,13 +1797,16 @@
       position: absolute !important;
       left: 8px !important;
       bottom: calc(7px + 13px + var(--Lovark-mode-height) + 3px) !important;
-      width: 236px !important;
+      width: 222px !important;
       max-width: calc(100% - 16px) !important;
+      max-height: 300px !important;
       padding: 4px !important;
       box-sizing: border-box !important;
       display: flex !important;
       flex-direction: column !important;
       gap: 1px !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
       background: #242423 !important;
       border: 1px solid #41413f !important;
       border-radius: 8px !important;
@@ -1819,12 +1822,12 @@
 
     #${PANEL_ID} .Lovark-add-menu-item {
       width: 100% !important;
-      min-height: 40px !important;
-      padding: 5px 7px !important;
+      min-height: 32px !important;
+      padding: 4px 7px !important;
       box-sizing: border-box !important;
       display: flex !important;
       align-items: center !important;
-      gap: 8px !important;
+      gap: 0 !important;
       border: 0 !important;
       border-radius: 6px !important;
       background: transparent !important;
@@ -1840,13 +1843,14 @@
     }
 
     #${PANEL_ID} .Lovark-add-menu-icon {
-      width: 18px !important;
-      height: 18px !important;
-      min-width: 18px !important;
+      width: 16px !important;
+      height: 16px !important;
+      min-width: 16px !important;
+      margin-right: 10px !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
-      color: #c5c5c2 !important;
+      color: #9f9e9b !important;
       flex: none !important;
     }
 
@@ -1854,35 +1858,68 @@
       width: 16px !important;
       height: 16px !important;
       display: block !important;
-      fill: none !important;
-      stroke: currentColor !important;
-      stroke-width: 1.7 !important;
-      stroke-linecap: round !important;
-      stroke-linejoin: round !important;
+      fill: currentColor !important;
+      stroke: none !important;
     }
 
     #${PANEL_ID} .Lovark-add-menu-copy {
       min-width: 0 !important;
       flex: 1 1 auto !important;
       display: flex !important;
-      flex-direction: column !important;
-      gap: 1px !important;
+      align-items: center !important;
+      gap: 4px !important;
     }
 
     #${PANEL_ID} .Lovark-add-menu-title {
+      min-width: 0 !important;
+      flex: 1 1 auto !important;
       color: #f1f1ef !important;
       font-size: 11px !important;
-      font-weight: 525 !important;
-      line-height: 14px !important;
+      font-weight: 450 !important;
+      line-height: 16px !important;
       white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
     }
 
-    #${PANEL_ID} .Lovark-add-menu-description {
+    #${PANEL_ID} .Lovark-add-menu-kbd {
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      min-width: 16px !important;
+      height: 16px !important;
+      padding: 0 2px !important;
       color: #9f9e9b !important;
-      font-size: 9px !important;
-      font-weight: 400 !important;
-      line-height: 12px !important;
-      white-space: nowrap !important;
+      font-family: Inter, Arial, sans-serif !important;
+      font-size: 10px !important;
+      line-height: 16px !important;
+      flex: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-trailing {
+      width: 16px !important;
+      height: 16px !important;
+      min-width: 16px !important;
+      margin-left: 8px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: #8f8e8b !important;
+      flex: none !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-trailing svg {
+      width: 16px !important;
+      height: 16px !important;
+      display: block !important;
+      fill: currentColor !important;
+    }
+
+    #${PANEL_ID} .Lovark-add-menu-separator {
+      height: 1px !important;
+      margin: 4px 0 !important;
+      background: #3b3b39 !important;
+      flex: none !important;
     }
 
     @keyframes Lovark-add-menu-in {
@@ -2542,57 +2579,40 @@
       setServicePromptVisible(showGithub || showChatGPT || showSupabase);
     };
 
-    const attachDismissHandler = (serviceKey, detection) => {
-      detection.closeButton.addEventListener("click", (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        dismissedServiceValues[serviceKey] = questionInput.value;
-        updateDetectedServicePrompts();
-        questionInput.focus();
-      });
-    };
-
-    attachDismissHandler("github", githubDetection);
-    attachDismissHandler("chatGPT", chatGPTDetection);
-    attachDismissHandler("supabase", supabaseDetection);
-
-
-    const addButton = document.createElement("button");
-    addButton.className = "Lovark-input-action Lovark-add";
-    addButton.type = "button";
-    addButton.setAttribute("aria-label", "Adicionar");
-    addButton.setAttribute("aria-pressed", "false");
-    addButton.innerHTML = `
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 5v14"></path>
-        <path d="M5 12h14"></path>
-      </svg>
-    `;
-    const addMenu = document.createElement("div");
-    addMenu.className = "Lovark-add-menu";
-    addMenu.hidden = true;
-    addMenu.setAttribute("role", "menu");
-    addMenu.setAttribute("aria-label", "Adicionar ao pedido");
-
+    const attachDismissHandler = (serviceKey, detection)
     const addMenuItems = [
       {
-        label: "Adicionar ficheiros",
-        description: "Anexe ficheiros ao seu pedido",
-        icon: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5.5 7.5 12a3.5 3.5 0 0 0 5 5l6-6a5 5 0 0 0-7.1-7.1l-6.2 6.2a6.5 6.5 0 0 0 9.2 9.2l5.1-5.1"></path></svg>`,
+        label: "Projeto",
+        icon: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5912 4.75216C12.7125 3.87348 11.2879 3.87348 10.4092 4.75216L4.75235 10.409C3.87367 11.2877 3.87367 12.7123 4.75235 13.591L10.4092 19.2478C11.2879 20.1265 12.7125 20.1265 13.5912 19.2478L19.248 13.591C20.1267 12.7123 20.1267 11.2877 19.248 10.409L13.5912 4.75216ZM20.3087 9.34835C21.7732 10.8128 21.7732 13.1872 20.3087 14.6517L14.6518 20.3085C13.1874 21.773 10.813 21.773 9.34854 20.3085L3.69169 14.6517C2.22722 13.1872 2.22722 10.8128 3.69169 9.34835L9.34854 3.6915C10.813 2.22703 13.1874 2.22703 14.6518L20.3087 9.34835Z"></path></svg>`,
+        trailing: "chevron",
       },
       {
-        label: "Adicionar imagem",
-        description: "Envie uma imagem para analisar",
-        icon: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2"></rect><circle cx="9" cy="10" r="1.5"></circle><path d="m5.5 17 4.5-4 3 2.5 2-2 3.5 3.5"></path></svg>`,
+        label: "Central de ajuda",
+        icon: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.25 12C20.25 7.44365 16.5563 3.75 12 3.75C7.44365 3.75 3.75 7.44365 3.75 12C3.75 16.5563 7.44365 20.25 12 20.25C16.5563 20.25 20.25 16.5563 20.25 12ZM11.25 13C11.25 12.1608 11.5834 11.3561 12.1768 10.7627L13.0557 9.88379C13.1801 9.75924 13.25 9.59015 13.25 9.41406C13.2499 9.04735 12.9527 8.75008 12.5859 8.75H11.5C11.1118 8.75 10.7925 9.04488 10.7539 9.42285L10.7461 9.57715C10.7075 9.95512 10.3882 10.25 10 10.25C9.58579 10.25 9.25 9.91421 9.25 9.5C9.25 8.25736 10.2574 7.25 11.5 7.25H12.5859C13.7811 7.25008 14.7499 8.21892 14.75 9.41406C14.75 9.98798 14.522 10.5385 14.1162 10.9443L13.2373 11.8232C12.9253 12.1353 12.75 12.5587 12.75 13C12.75 13.4142 12.4142 13.75 12 13.75C11.5858 13.75 11.25 13.4142 11.25 13ZM21.75 12C21.75 17.3848 17.3848 21.75 12 21.75C6.61522 21.75 2.25 17.3848 2.25 12C2.25 6.61522 6.61522 2.25 12 2.25C17.3848 2.25 21.75 6.61522 21.75 12Z"></path><path d="M13 16C13 16.5523 12.5523 17 12 17C11.4477 17 11 16.5523 11 16C11 15.4477 11.4477 15 12 15C12.5523 15 13 15.4477 13 16Z"></path></svg>`,
+        trailing: "external",
+      },
+      { separator: true },
+      {
+        label: "Adicionar contexto",
+        kbd: "@",
+        icon: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.75 15L3.75 7C3.75003 5.75739 4.75738 4.75001 6 4.75L18 4.75C19.2426 4.75 20.25 5.75736 20.25 7V12C20.25 12.4142 20.5858 12.75 21 12.75C21.4142 12.75 21.75 12.4142 21.75 12V7C21.75 4.92893 20.0711 3.25 18 3.25L6 3.25C3.92896 3.25001 2.25003 4.92896 2.25 7L2.25 15C2.25 17.0711 3.92893 18.75 6 18.75H6.25V21C6.25 21.2702 6.39573 21.5192 6.63086 21.6523C6.86588 21.7853 7.15414 21.7824 7.38574 21.6436L12.3857 18.6436C12.7408 18.4305 12.8565 17.9694 12.6436 17.6143C12.4308 17.2592 11.9694 17.1436 11.6143 17.3564L7.75 19.6748V18C7.74998 17.5858 7.41418 17.25 7 17.25H6C4.75736 17.25 3.75 16.2426 3.75 15ZM7.00195 11.25C6.58774 11.25 6.25195 11.5858 6.25195 12C6.25197 12.4142 6.58775 12.75 7.00195 12.75L11.002 12.75C11.4162 12.75 11.7519 12.4142 11.752 12C11.752 11.5858 11.4162 11.25 11.002 11.25L7.00195 11.25ZM7.00195 7.25C6.58774 7.25 6.25195 7.58579 6.25195 8C6.25197 8.4142 6.58775 8.75 7.00195 8.75L17.002 8.75C17.4162 8.75 17.7519 8.4142 17.752 8C17.752 7.58579 17.4162 7.25 17.002 7.25L7.00195 7.25Z"></path><path d="M18.252 22V19.75L16.002 19.75C15.5877 19.75 15.252 19.4142 15.252 19C15.252 18.5858 15.5877 18.25 16.002 18.25H18.252L18.252 16C18.252 15.5858 18.5877 15.25 19.002 15.25C19.4162 15.25 19.752 15.5858 19.752 16L19.752 18.25H22.002C22.4162 18.25 22.752 18.5858 22.752 19C22.752 19.4142 22.4162 19.75 22.002 19.75H19.752V22C19.752 22.4142 19.4162 22.75 19.002 22.75C18.5877 22.75 18.252 22.4142 18.252 22Z"></path></svg>`,
+        trailing: "chevron",
       },
       {
-        label: "Importar do GitHub",
-        description: "Adicione um repositório ao pedido",
-        icon: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.2 1.3-4.2-2.1-5.9-2.5M15 22v-3.9c0-1.1.1-1.6-.5-2.2 3.3-.4 6.8-1.6 6.8-7.2a5.6 5.6 0 0 0-1.5-3.9 5.2 5.2 0 0 0-.1-3.8s-1.2-.4-4 1.5a13.7 13.7 0 0 0-7.4 0c-2.8-1.9-4-1.5-4-1.5a5.2 5.2 0 0 0-.1 3.8 5.6 5.6 0 0 0-1.5 3.9c0 5.6 3.5 6.8 6.8 7.2-.6.5-.6 1.1-.5 2.2V22"></path></svg>`,
+        label: "Anexar arquivos",
+        icon: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.25 15V8C5.25 7.58579 5.58579 7.25 6 7.25C6.41421 7.25 6.75 7.58579 6.75 8V15C6.75 17.8995 9.10051 20.25 12 20.25C14.8995 20.25 17.25 17.8995 17.25 15V7C17.25 5.20507 15.7949 3.75 14 3.75C12.2051 3.75 10.75 5.20507 10.75 7V15C10.75 15.6904 11.3096 16.25 12 16.25C12.6904 16.25 13.25 15.6904 13.25 15V8C13.25 7.58579 13.5858 7.25 14 7.25C14.4142 7.25 14.75 7.58579 14.75 8V15C14.75 16.5188 13.5188 17.75 12 17.75C10.4812 17.75 9.25 16.5188 9.25 15V7C9.25 4.37665 11.3766 2.25 14 2.25C16.6234 2.25 18.75 4.37665 18.75 7V15C18.75 18.7279 15.7279 21.75 12 21.75C8.27208 21.75 5.25 18.7279 5.25 15Z"></path></svg>`,
       },
     ];
 
     for (const item of addMenuItems) {
+      if (item.separator) {
+        const separator = document.createElement("div");
+        separator.className = "Lovark-add-menu-separator";
+        separator.setAttribute("role", "separator");
+        addMenu.appendChild(separator);
+        continue;
+      }
+
       const option = document.createElement("button");
       option.type = "button";
       option.className = "Lovark-add-menu-item";
@@ -2608,22 +2628,33 @@
       const title = document.createElement("span");
       title.className = "Lovark-add-menu-title";
       title.textContent = item.label;
-
-      const description = document.createElement("span");
-      description.className = "Lovark-add-menu-description";
-      description.textContent = item.description;
-
       copy.appendChild(title);
-      copy.appendChild(description);
+
+      if (item.kbd) {
+        const kbd = document.createElement("kbd");
+        kbd.className = "Lovark-add-menu-kbd";
+        kbd.textContent = item.kbd;
+        copy.appendChild(kbd);
+      }
+
       option.appendChild(icon);
       option.appendChild(copy);
+
+      if (item.trailing) {
+        const trailing = document.createElement("span");
+        trailing.className = "Lovark-add-menu-trailing";
+        trailing.setAttribute("aria-hidden", "true");
+        trailing.innerHTML =
+          item.trailing === "external"
+            ? '<svg viewBox="0 0 24 24"><path d="M18.7499 15C18.7499 15.4142 18.4142 15.75 17.9999 15.75C17.5857 15.75 17.2499 15.4142 17.2499 15V7.81055L6.53022 18.5303C6.23732 18.8232 5.76256 18.8232 5.46967 18.5303C5.17678 18.2374 5.17678 17.7626 5.46967 17.4697L16.1894 6.75H8.99994C8.58573 6.75 8.24994 6.41421 8.24994 6C8.24994 5.58579 8.58573 5.25 8.99994 5.25H17.9999C18.4142 5.25 18.7499 5.58579 18.7499 6V15Z"></path></svg>'
+            : '<svg viewBox="0 0 24 24"><path d="M9.46967 6.46973C9.76256 6.17684 10.2373 6.17684 10.5302 6.46973L15.5302 11.4697C15.8231 11.7626 15.8231 12.2374 15.5302 12.5303L10.5302 17.5303C10.2373 17.8232 9.76256 17.8232 9.46967 17.5303C9.17678 17.2374 9.17678 16.7626 9.46967 16.4697L13.9394 12L9.46967 7.53028C9.17678 7.23738 9.17678 6.76262 9.46967 6.46973Z"></path></svg>';
+        option.appendChild(trailing);
+      }
 
       option.addEventListener("click", (event) => {
         event.preventDefault();
         event.stopPropagation();
-        addButton.classList.remove("is-open");
-        addButton.setAttribute("aria-pressed", "false");
-        addMenu.hidden = true;
+        setAddMenuOpen(false);
       });
 
       addMenu.appendChild(option);
