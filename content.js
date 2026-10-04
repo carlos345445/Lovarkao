@@ -208,60 +208,6 @@
     return /\p{L}/u.test(remainingText) && !/\d/.test(remainingText);
   }
 
-  function isLovableUpgradeElement(element) {
-    if (
-      element?.tagName !== "DIV" ||
-      element.getAttribute("role") !== null ||
-      !element.classList.contains("flex") ||
-      !element.classList.contains("items-center") ||
-      !element.classList.contains("gap-px") ||
-      element.children.length !== 2 ||
-      element.children[0]?.tagName !== "P" ||
-      element.children[1]?.tagName !== "SVG"
-    ) {
-      return false;
-    }
-
-    const upgradeText = element.children[0]?.textContent?.trim().toLowerCase();
-    if (
-      upgradeText !== "upgrade" &&
-      upgradeText !== LOVABLE_COUNTER_TEXT.toLowerCase()
-    ) {
-      return false;
-    }
-
-    const header = element.parentElement;
-    const card = header?.parentElement;
-
-    return Boolean(
-      header?.tagName === "DIV" &&
-      header.classList.contains("flex") &&
-      header.classList.contains("items-center") &&
-      header.classList.contains("justify-between") &&
-      header.children.length === 2 &&
-      header.children[0]?.tagName === "P" &&
-      header.children[0]?.textContent?.trim().toLowerCase() === "credits" &&
-      card?.tagName === "DIV" &&
-      card.getAttribute("role") === "menuitem" &&
-      card.classList.contains("group/credits-card") &&
-      card.querySelector(':scope > div > [data-slot="meter"]')
-    );
-  }
-
-  function getLovableUpgradeElement(node) {
-    const element =
-      node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
-    const candidate = element?.closest?.("div.flex.items-center.gap-px");
-    return isLovableUpgradeElement(candidate) ? candidate : null;
-  }
-
-  function applyLovableUpgradeElement(element) {
-    const textElement = element.children[0];
-    if (textElement && textElement.textContent !== LOVABLE_COUNTER_TEXT) {
-      textElement.textContent = LOVABLE_COUNTER_TEXT;
-    }
-  }
-
   function getLovableCreditTrigger(node) {
     const element =
       node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
@@ -569,12 +515,8 @@
     const paragraphs = new Set();
     const meters = new Set();
     const creditTriggers = new Set();
-    const upgradeElements = new Set();
 
     if (becameActive) {
-      for (const element of document.querySelectorAll('div.flex.items-center.gap-px')) {
-        if (isLovableUpgradeElement(element)) upgradeElements.add(element);
-      }
       collectCreditParagraphs(document.documentElement, paragraphs);
       collectCreditMeters(document.documentElement, meters);
       collectLovableCreditTriggers(
@@ -600,18 +542,11 @@
         const changedTrigger = getLovableCreditTrigger(node);
         if (changedTrigger) creditTriggers.add(changedTrigger);
 
-        const changedUpgrade = getLovableUpgradeElement(node);
-        if (changedUpgrade) upgradeElements.add(changedUpgrade);
       }
       for (const node of addedNodes) {
         collectCreditParagraphs(node, paragraphs);
         collectCreditMeters(node, meters);
         collectLovableCreditTriggers(node, creditTriggers);
-        const addedUpgrade = getLovableUpgradeElement(node);
-        if (addedUpgrade) upgradeElements.add(addedUpgrade);
-        for (const element of node.querySelectorAll?.("div.flex.items-center.gap-px") ?? []) {
-          if (isLovableUpgradeElement(element)) upgradeElements.add(element);
-        }
       }
     } else {
       for (const paragraph of overriddenLovableCounterParagraphs) {
@@ -649,9 +584,6 @@
 
     for (const trigger of creditTriggers) {
       applyLovableCreditTrigger(trigger);
-    }
-    for (const element of upgradeElements) {
-      applyLovableUpgradeElement(element);
     }
 
     for (const [meter, state] of Array.from(
@@ -1411,6 +1343,111 @@
       opacity: 1 !important;
       visibility: visible !important;
       transform: translate(50%, 0) !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-card {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      margin: 5px 0 7px !important;
+      padding: 0 !important;
+      border-radius: 11px !important;
+      background: #252524 !important;
+      color: #f1f1ef !important;
+      overflow: hidden !important;
+      font-family: Inter, Arial, sans-serif !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-card-inner {
+      width: 100% !important;
+      box-sizing: border-box !important;
+      border: 1px solid #393937 !important;
+      border-radius: 11px !important;
+      background: #2b2b2a !important;
+      overflow: hidden !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-header {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 7px !important;
+      min-height: 31px !important;
+      padding: 7px 9px !important;
+      box-sizing: border-box !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-title {
+      min-width: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      color: #f1f1ef !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      line-height: 15px !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-title svg {
+      width: 14px !important;
+      height: 14px !important;
+      flex: 0 0 auto !important;
+      fill: currentColor !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-status {
+      flex: 0 0 auto !important;
+      color: #8f8f8c !important;
+      font-size: 9px !important;
+      font-weight: 500 !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-body {
+      padding: 8px 10px !important;
+      border-top: 1px solid #353533 !important;
+      border-bottom: 1px solid #353533 !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-heading {
+      margin: 0 !important;
+      color: #f1f1ef !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      line-height: 15px !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-text {
+      margin: 3px 0 0 !important;
+      color: #a9a9a5 !important;
+      font-size: 10px !important;
+      font-weight: 400 !important;
+      line-height: 14px !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-actions {
+      display: flex !important;
+      gap: 5px !important;
+      padding: 6px 8px !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-action {
+      flex: 1 1 0 !important;
+      min-width: 0 !important;
+      height: 25px !important;
+      padding: 0 8px !important;
+      border: 0 !important;
+      border-radius: 7px !important;
+      background: transparent !important;
+      color: #c6c6c2 !important;
+      font-family: Inter, Arial, sans-serif !important;
+      font-size: 10px !important;
+      font-weight: 500 !important;
+      cursor: pointer !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-action:hover {
+      background: #353533 !important;
+      color: #f1f1ef !important;
     }
 
     #${PANEL_ID} .Lovark-input {
@@ -2862,6 +2899,87 @@
         ? new Intl.Segmenter("pt-PT", { granularity: "grapheme" })
         : null;
 
+    const appendLovarkResponseCard = (userText) => {
+      const row = document.createElement("div");
+      row.className = "Lovark-response-row";
+      row.style.cssText =
+        "width:100%;display:flex;justify-content:flex-start;box-sizing:border-box;";
+
+      const card = document.createElement("div");
+      card.className = "Lovark-response-card";
+      card.setAttribute("data-testid", "chat-item-git_commit");
+      card.setAttribute("data-chat-item-type", "git_commit");
+
+      const inner = document.createElement("div");
+      inner.className = "Lovark-response-card-inner";
+
+      const header = document.createElement("div");
+      header.className = "Lovark-response-header";
+
+      const title = document.createElement("div");
+      title.className = "Lovark-response-title";
+      title.innerHTML = `
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path>
+        </svg>
+        <span>Lovark</span>
+      `;
+
+      const status = document.createElement("span");
+      status.className = "Lovark-response-status";
+      status.textContent = "Resposta";
+
+      header.appendChild(title);
+      header.appendChild(status);
+
+      const body = document.createElement("div");
+      body.className = "Lovark-response-body";
+
+      const heading = document.createElement("p");
+      heading.className = "Lovark-response-heading";
+      heading.textContent = "Mensagem recebida";
+
+      const responseText = document.createElement("p");
+      responseText.className = "Lovark-response-text";
+      responseText.textContent = "A tua mensagem foi processada pelo Lovark.";
+
+      body.appendChild(heading);
+      body.appendChild(responseText);
+
+      const actions = document.createElement("div");
+      actions.className = "Lovark-response-actions";
+
+      const detailsButton = document.createElement("button");
+      detailsButton.type = "button";
+      detailsButton.className = "Lovark-response-action";
+      detailsButton.textContent = "Detalhes";
+      detailsButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        responseText.textContent = userText;
+      });
+
+      const continueButton = document.createElement("button");
+      continueButton.type = "button";
+      continueButton.className = "Lovark-response-action";
+      continueButton.textContent = "Continuar";
+      continueButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        questionInput.focus();
+      });
+
+      actions.appendChild(detailsButton);
+      actions.appendChild(continueButton);
+
+      inner.appendChild(header);
+      inner.appendChild(body);
+      inner.appendChild(actions);
+      card.appendChild(inner);
+      row.appendChild(card);
+      messageList.appendChild(row);
+    };
+
     const appendChatMessage = (text) => {
       const messageRow = document.createElement("div");
       messageRow.className = "Lovark-message-row";
@@ -2980,6 +3098,7 @@
       const text = questionInput.value.trim();
       if (!text) return;
       appendChatMessage(text);
+      appendLovarkResponseCard(text);
       questionInput.value = "";
       questionInput.dispatchEvent(new Event("input", { bubbles: true }));
       questionInput.focus();
