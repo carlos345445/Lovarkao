@@ -208,6 +208,26 @@
     return /\p{L}/u.test(remainingText) && !/\d/.test(remainingText);
   }
 
+  function isLovableUpgradeElement(element) {
+    return (
+      element?.tagName === "DIV" &&
+      element.classList.contains("flex") &&
+      element.classList.contains("items-center") &&
+      element.classList.contains("gap-px") &&
+      element.children.length === 2 &&
+      element.children[0]?.tagName === "P" &&
+      element.children[0]?.textContent?.trim().toLowerCase() === "upgrade" &&
+      element.children[1]?.tagName === "SVG"
+    );
+  }
+
+  function applyLovableUpgradeElement(element) {
+    const textElement = element.children[0];
+    if (textElement && textElement.textContent !== LOVABLE_COUNTER_TEXT) {
+      textElement.textContent = LOVABLE_COUNTER_TEXT;
+    }
+  }
+
   function getLovableCreditTrigger(node) {
     const element =
       node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
@@ -515,8 +535,12 @@
     const paragraphs = new Set();
     const meters = new Set();
     const creditTriggers = new Set();
+    const upgradeElements = new Set();
 
     if (becameActive) {
+      for (const element of document.querySelectorAll("div.flex.items-center.gap-px")) {
+        if (isLovableUpgradeElement(element)) upgradeElements.add(element);
+      }
       collectCreditParagraphs(document.documentElement, paragraphs);
       collectCreditMeters(document.documentElement, meters);
       collectLovableCreditTriggers(
@@ -546,6 +570,10 @@
         collectCreditParagraphs(node, paragraphs);
         collectCreditMeters(node, meters);
         collectLovableCreditTriggers(node, creditTriggers);
+        if (isLovableUpgradeElement(node)) upgradeElements.add(node);
+        for (const element of node.querySelectorAll?.("div.flex.items-center.gap-px") ?? []) {
+          if (isLovableUpgradeElement(element)) upgradeElements.add(element);
+        }
       }
     } else {
       for (const paragraph of overriddenLovableCounterParagraphs) {
@@ -583,6 +611,9 @@
 
     for (const trigger of creditTriggers) {
       applyLovableCreditTrigger(trigger);
+    }
+    for (const element of upgradeElements) {
+      applyLovableUpgradeElement(element);
     }
 
     for (const [meter, state] of Array.from(
