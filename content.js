@@ -1551,6 +1551,7 @@
       right: 0 !important;
       text-align: right !important;
       transform: translate(0, 3px) !important;
+      transform-origin: top right !important;
     }
 
     #${PANEL_ID} .Lovark-response-tool-revert:hover::after,
