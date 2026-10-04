@@ -1462,7 +1462,7 @@
       min-height: 22px !important;
       display: flex !important;
       align-items: center !important;
-      gap: 5px !important;
+      gap: 4px !important;
       margin: 3px 0 0 1px !important;
       padding: 0 !important;
       box-sizing: border-box !important;
@@ -1483,9 +1483,9 @@
 
     #${PANEL_ID} .Lovark-response-tool {
       position: relative !important;
-      width: 20px !important;
-      height: 20px !important;
-      min-width: 20px !important;
+      width: 18px !important;
+      height: 18px !important;
+      min-width: 18px !important;
       padding: 0 !important;
       display: flex !important;
       align-items: center !important;
@@ -1502,8 +1502,8 @@
     }
 
     #${PANEL_ID} .Lovark-response-tool svg {
-      width: 15px !important;
-      height: 15px !important;
+      width: 14px !important;
+      height: 14px !important;
       display: block !important;
       fill: none !important;
       stroke: currentColor !important;
@@ -3164,7 +3164,7 @@
       const notUsefulButton = createToolbarButton(
         "Lovark-response-tool-not-useful",
         "Não é útil",
-        `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="Lovark-response-thumb-icon"><path d="M7.25 4.5H7C5.067 4.5 3.5 6.067 3.5 8V12C3.5 13.933 5.067 15.5 7 15.5H7.25V4.5Z" fill="currentColor"></path><path d="M13.8555 20.5C15.6279 20.5 16.7224 18.5667 15.8105 17.0469L14.8828 15.5H16.5693C19.0452 15.4997 20.7379 12.9991 19.8184 10.7002L18.2188 6.7002C17.6872 5.3714 16.3999 4.5 14.9688 4.5H8.75V15.5H8.75977L12.0752 19.6445C12.5079 20.1852 13.1629 20.4999 13.8555 20.5Z" fill="currentColor"></path></svg>`,
+        `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="Lovark-response-thumb-icon"><g transform="rotate(180 12 12)"><path d="M7.25 19.5H7C5.067 19.5 3.5 17.933 3.5 16V12C3.5 10.067 5.067 8.5 7 8.5H7.25V19.5Z" fill="currentColor"></path><path d="M13.8555 3.5C15.6279 3.5 16.7224 5.43326 15.8105 6.95312L14.8828 8.5H16.5693C19.0452 8.50029 20.7379 11.0009 19.8184 13.2998L18.2188 17.2998C17.6872 18.6286 16.3999 19.5 14.9688 19.5H8.75V8.5H8.75977L12.0752 4.35547C12.5079 3.81477 13.1629 3.50006 13.8555 3.5Z" fill="currentColor"></path></g></svg>`,
         (button) => {
           button.classList.toggle("is-active");
           usefulButton.classList.remove("is-active");
