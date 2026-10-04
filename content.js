@@ -1349,7 +1349,8 @@
       width: 100% !important;
       min-width: 0 !important;
       display: flex !important;
-      justify-content: flex-start !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
       box-sizing: border-box !important;
       margin: 2px 0 5px !important;
     }
@@ -1365,10 +1366,9 @@
       background: #242424 !important;
       color: #f1f1ef !important;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.28) !important;
-      font-family: Inter, Arial, sans-serif !important;
+      font-family: "Inter", Arial, sans-serif !important;
     }
 
-    /* Cabeçalho: a única moldura roxa fica nesta zona. */
     #${PANEL_ID} .Lovark-response-header {
       display: flex !important;
       align-items: center !important;
@@ -1408,7 +1408,6 @@
       white-space: nowrap !important;
     }
 
-    /* Rodapé: sem azul. Usa o cinza já utilizado nas bordas da extensão. */
     #${PANEL_ID} .Lovark-response-actions {
       display: flex !important;
       width: 100% !important;
@@ -1454,6 +1453,108 @@
 
     #${PANEL_ID} .Lovark-response-preview:disabled {
       opacity: 1 !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-toolbar {
+      width: max-content !important;
+      max-width: 100% !important;
+      min-height: 27px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 2px !important;
+      margin: 3px 0 0 2px !important;
+      padding: 1px 2px !important;
+      box-sizing: border-box !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      transform: translateY(-2px) !important;
+      transition: opacity 120ms ease, transform 120ms ease, visibility 120ms ease !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-row:hover .Lovark-response-toolbar,
+    #${PANEL_ID} .Lovark-response-row:focus-within .Lovark-response-toolbar {
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      transform: translateY(0) !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-tool {
+      position: relative !important;
+      width: 27px !important;
+      height: 27px !important;
+      min-width: 27px !important;
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-sizing: border-box !important;
+      border: 1px solid transparent !important;
+      border-radius: 7px !important;
+      outline: none !important;
+      background: transparent !important;
+      color: #a9a9a6 !important;
+      cursor: pointer !important;
+      font-family: "Inter", Arial, sans-serif !important;
+      transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-tool svg {
+      width: 15px !important;
+      height: 15px !important;
+      display: block !important;
+      fill: none !important;
+      stroke: currentColor !important;
+      stroke-width: 1.8 !important;
+      stroke-linecap: round !important;
+      stroke-linejoin: round !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-tool:hover,
+    #${PANEL_ID} .Lovark-response-tool:focus-visible {
+      border-color: #555553 !important;
+      background: #30302f !important;
+      color: #f1f1ef !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-tool.is-active,
+    #${PANEL_ID} .Lovark-response-tool.is-copied {
+      border-color: #6c33d4 !important;
+      background: #2b174f !important;
+      color: #b18aff !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-tool::after {
+      content: attr(data-tooltip) !important;
+      position: absolute !important;
+      left: 50% !important;
+      bottom: calc(100% + 7px) !important;
+      transform: translate(-50%, 3px) !important;
+      padding: 5px 8px !important;
+      border: 1px solid #454543 !important;
+      border-radius: 7px !important;
+      background: #30302f !important;
+      color: #f1f1ef !important;
+      box-shadow: 0 5px 16px rgba(0, 0, 0, 0.34) !important;
+      font-family: "Inter", Arial, sans-serif !important;
+      font-size: 10px !important;
+      font-weight: 500 !important;
+      line-height: 14px !important;
+      white-space: nowrap !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      transition: opacity 110ms ease, transform 110ms ease, visibility 110ms ease !important;
+      z-index: 30 !important;
+    }
+
+    #${PANEL_ID} .Lovark-response-tool:hover::after,
+    #${PANEL_ID} .Lovark-response-tool:focus-visible::after,
+    #${PANEL_ID} .Lovark-response-tool.is-copied::after {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translate(-50%, 0) !important;
     }
 
     #${PANEL_ID} .Lovark-input {
@@ -2972,7 +3073,6 @@
         </svg>
         <span class="Lovark-response-title-text"></span>
       `;
-
       title.querySelector(".Lovark-response-title-text").textContent = userText;
       header.appendChild(title);
 
@@ -3000,7 +3100,88 @@
 
       card.appendChild(header);
       card.appendChild(actions);
+
+      const toolbar = document.createElement("div");
+      toolbar.className = "Lovark-response-toolbar";
+      toolbar.setAttribute("aria-label", "Ações da resposta");
+
+      const createToolbarButton = (className, label, svg, onClick) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `Lovark-response-tool ${className}`;
+        button.setAttribute("aria-label", label);
+        button.setAttribute("data-tooltip", label);
+        button.innerHTML = svg;
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          onClick(button);
+        });
+        return button;
+      };
+
+      const revertButton = createToolbarButton(
+        "Lovark-response-tool-revert",
+        "Reverter para esta versão",
+        `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-1"/></svg>`,
+        (button) => button.classList.toggle("is-active")
+      );
+
+      const usefulButton = createToolbarButton(
+        "Lovark-response-tool-useful",
+        "Útil",
+        `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v10H4a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h3Z"/><path d="M7 10l4-8c.4-.8 1.4-1.2 2.2-.7.7.4 1 1.2.8 2L13 9h5.6a2 2 0 0 1 2 2.4l-1.1 6A2 2 0 0 1 17.5 19H7"/></svg>`,
+        (button) => {
+          button.classList.toggle("is-active");
+          notUsefulButton.classList.remove("is-active");
+        }
+      );
+
+      const notUsefulButton = createToolbarButton(
+        "Lovark-response-tool-not-useful",
+        "Não é útil",
+        `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14V4H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3Z"/><path d="M7 14l4 8c.4.8 1.4 1.2 2.2.7.7-.4 1-1.2.8-2L13 15h5.6a2 2 0 0 0 2-2.4l-1.1-6A2 2 0 0 0 17.5 5H7"/></svg>`,
+        (button) => {
+          button.classList.toggle("is-active");
+          usefulButton.classList.remove("is-active");
+        }
+      );
+
+      const copyToolbarButton = createToolbarButton(
+        "Lovark-response-tool-copy",
+        "Copiar",
+        `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>`,
+        async (button) => {
+          try {
+            await copyMessageToClipboard(userText);
+            button.classList.add("is-active", "is-copied");
+            button.setAttribute("data-tooltip", "Copiado");
+            button.setAttribute("aria-label", "Copiado");
+            button.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>`;
+            if (button.copyFeedbackTimer) {
+              window.clearTimeout(button.copyFeedbackTimer);
+            }
+            button.copyFeedbackTimer = window.setTimeout(() => {
+              button.classList.remove("is-active", "is-copied");
+              button.setAttribute("data-tooltip", "Copiar");
+              button.setAttribute("aria-label", "Copiar");
+              button.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>`;
+            }, 1800);
+            copyFeedbackTimers.add(button.copyFeedbackTimer);
+          } catch {
+            button.setAttribute("data-tooltip", "Falha ao copiar");
+            button.setAttribute("aria-label", "Falha ao copiar");
+          }
+        }
+      );
+
+      toolbar.appendChild(revertButton);
+      toolbar.appendChild(usefulButton);
+      toolbar.appendChild(notUsefulButton);
+      toolbar.appendChild(copyToolbarButton);
+
       row.appendChild(card);
+      row.appendChild(toolbar);
       messageList.appendChild(row);
     };
 
